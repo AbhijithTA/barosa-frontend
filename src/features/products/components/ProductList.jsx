@@ -20,7 +20,7 @@ import {toast} from 'react-toastify'
 import {banner1, banner2, banner3, banner4, loadingAnimation} from '../../../assets'
 import { resetCartItemAddStatus, selectCartItemAddStatus } from '../../cart/CartSlice'
 import { motion } from 'framer-motion'
-import { ProductBanner } from './ProductBanner'
+import { ProductBanner } from './ProductBanner.jsx';
 import ClearIcon from '@mui/icons-material/Clear';
 import Lottie from 'lottie-react'
 
@@ -260,7 +260,7 @@ export const ProductList = () => {
                 {
                     !is600 && 
                 
-                <Stack sx={{width:"100%",height:is800?"300px":is1200?"400px":"500px"}}>
+                <Stack sx={{width:"100%",height:is800?"300px":is1200?"400px":"700px"}}>
                     <ProductBanner images={bannerImages}/>
                 </Stack>
                 }

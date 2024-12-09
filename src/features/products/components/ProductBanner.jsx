@@ -1,50 +1,80 @@
-import SwipeableViews from 'react-swipeable-views';
-import { autoPlay } from 'react-swipeable-views-utils';
-import MobileStepper from '@mui/material/MobileStepper';
-import { Box, useTheme } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Homebg1 from "../../../assets/images/img1.jpg";
+import Homebg2 from "../../../assets/images/img2.jpg";
+import Homebg3 from "../../../assets/images/img3.jpg";
+import Homebg4 from "../../../assets/images/bussiness.jpg";
+import Homebg5 from "../../../assets/images/lady.jpg";
 
-const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
+const textAnimation = {
+  hidden: { y: "100%", opacity: 0 },
+  visible: { y: "0%", opacity: 1 },
+};
 
-export const ProductBanner = ({images}) => {
+const backgrounds = [
+  { image: Homebg4, heading: "DISCOVER YOUR PERFECT FIT" },
+  { image: Homebg5, heading: "UNBEATABLE TRENDS, UNMATCHED PRICES" },
+  { image: Homebg3, heading: "SHOP EFFORTLESSLY SHINE ALWAYS" },
+];
 
-    const theme=useTheme()
+export const ProductBanner = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-    const [activeStep, setActiveStep] = useState(0);
-    const maxSteps = images.length;
-
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
-
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleStepChange = (step) => {
-        setActiveStep(step);
-    };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % backgrounds.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <>
-    <AutoPlaySwipeableViews style={{overflow:"hidden"}} width={'100%'} height={'100%'} axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'} index={activeStep} onChangeIndex={handleStepChange} enableMouseEvents >
-        {
-        images.map((image,index) => (
-        <div key={index} style={{width:"100%",height:'100%'}}>
-            {
-            Math.abs(activeStep - index) <= 2 
-                ?
-                <Box component="img" sx={{width:'100%',objectFit:"contain"}} src={image} alt={'Banner Image'} />
-                :
-                    null
-            }
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={currentIndex}
+        className="h-screen w-screen bg-no-repeat bg-cover flex items-center relative justify-center"
+        style={{ backgroundImage: `url(${backgrounds[currentIndex].image})` }}
+        initial={{ backgroundSize: "120%" }}
+        animate={{ backgroundSize: "100%" }}
+        transition={{ duration: 2 }}
+      >
+        <div className="z-10 flex flex-col w-1/2 ml-10 text-center">
+          <motion.h1
+            key={currentIndex}
+            className="text-4xl md:text-6xl bona-nova-sc-bold text-white text-center"
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 1, delay: 0.5 }}
+            variants={textAnimation}
+          >
+            {backgrounds[currentIndex].heading}
+          </motion.h1>
+          <motion.p
+            className="text-white mt-4 text-center text-lg"
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 1, delay: 1 }}
+            variants={textAnimation}
+          >
+            Browse, buy, and dazzle with ease. Your next favorite dress is just a click away!
+          </motion.p>
         </div>
-        ))
-        }
-    </AutoPlaySwipeableViews>
-    <div style={{alignSelf:'center'}}>
-        <MobileStepper steps={maxSteps} position="static" activeStep={activeStep}/>
-    </div>
-    </>
-  )
-}
+
+        {/* Indicator dots */}
+        <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 flex gap-2">
+          {backgrounds.map((_, index) => (
+            <span
+              key={index}
+              className={`w-3 h-3 rounded-full cursor-pointer transition-colors duration-300 ${
+                index === currentIndex
+                  ? "bg-black"
+                  : "bg-gray-400 opacity-60"
+              }`}
+            ></span>
+          ))}
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+
