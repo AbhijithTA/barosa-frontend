@@ -1,148 +1,226 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import { Link, useNavigate } from 'react-router-dom';
-import { Badge, Button,  Stack, useMediaQuery, useTheme } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectUserInfo } from '../../user/UserSlice';
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import { selectCartItems } from '../../cart/CartSlice';
-import { logoutAsync, selectLoggedInUser } from '../../auth/AuthSlice';
-import { selectWishlistItems } from '../../wishlist/WishlistSlice';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import TuneIcon from '@mui/icons-material/Tune';
-import { selectProductIsFilterOpen, toggleFilters } from '../../products/ProductSlice';
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Profile, Cart,  Love } from "../../../assets/icons";
 
+export const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [dropdown, setDropdown] = useState(false);
 
-
-export const Navbar=({isProductList=false})=> {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const userInfo=useSelector(selectUserInfo)
-  const cartItems=useSelector(selectCartItems)
-  const loggedInUser=useSelector(selectLoggedInUser)
-  const navigate=useNavigate()
-  const dispatch=useDispatch()
-  const theme=useTheme()
-  const is480=useMediaQuery(theme.breakpoints.down(480))
-
-  const wishlistItems=useSelector(selectWishlistItems)
-  const isProductFilterOpen=useSelector(selectProductIsFilterOpen)
-
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
+  const handleOutsideClick = (e) => {
+    if (!e.target.closest(".dropdown-container")) {
+      setDropdown(false);
+    }
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  useEffect(() => {
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  });
 
-  const handleToggleFilters=()=>{
-    dispatch(toggleFilters())
-  }
+  useEffect(() => {
+    const handleScroll = () => {
+      // Add scroll handling logic if needed
+    };
 
-
-  const settings = [
-    {name:"Home",to:"/"},
-    {name:"All products",to:"/admin/dashboard"},
-    {name:'Profile',to:loggedInUser?.isAdmin?"/admin/profile":"/profile"},
-    {name:loggedInUser?.isAdmin?'Orders':'My orders',to:loggedInUser?.isAdmin?"/admin/orders":"/orders"},
-    {name:'Logout', to:"/logout"},
-  ];
-
-
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
-    <AppBar position="sticky" sx={{backgroundColor:"white",boxShadow:"none",color:"text.primary"}}>
-        <Toolbar sx={{p:1,height:"4rem",display:"flex",justifyContent:"space-around"}}>
-
-          <Typography variant="h6" noWrap component="a" href="/" sx={{ mr: 2, display: { xs: 'none', md: 'flex' },fontWeight: 700, letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none', }}>
-            BAROSA 
-          </Typography>
-
-
-
-          <Stack flexDirection={'row'} alignItems={'center'} justifyContent={'center'} columnGap={2}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={userInfo?.name || "Guest"} src="null" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+    <div className="fixed top-0 w-full h-[65px] bg-white text-black shadow-md z-[1000]">
+      <div className="flex items-center justify-between px-4 md:px-8 h-full">
+        {/* Desktop Links */}
+        <div className="hidden md:flex gap-10 sm:gap-5 w-2/6 ">
+          <div className="relative flex dropdown-container">
+            <button
+              className="hover:text-black/50 flex"
+              onClick={() => setDropdown(!dropdown)}
             >
+              SHOP
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={`w-4 h-4 ml-1 transform transition-transform duration-200 ${
+                  dropdown ? "rotate-180" : "rotate-0"
+                }`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+            {dropdown && (
+              <div className="absolute left-0 bg-white shadow-lg z-10 w-[97vw] mt-10 flex flex-wrap justify-between py-8">
+                <div className="w-1/4 flex flex-col items-center">
+                <ul>
+                <h1 className="font-semibold">Women</h1>
+                  <li>Top </li>
+                  <li>Mid Dress</li>
+                  <li>Long Dress</li>
+                  <li>Sets</li>
+                  <li>Pants</li>
+                  <li>shorts</li>
+                  <li>Sleepware</li>
+                  <li>Blazers</li>
+                </ul>
+                </div>
+                <div className="w-1/4 flex  flex-col items-center">
+                <ul>
+                <h1 className="font-semibold ">Men</h1>
+                  <li>Shirts </li>
+                  <li>Pants</li>
+                  <li>Casual Pants</li>
+                  <li>Suits</li>
+                  <li>shorts</li>
+                  <li>Sleepware</li>
+                  <li>Blazers</li>
+                  <li>Sets</li>
+                </ul>
+                </div>
+                <div className="w-1/4 flex  flex-col items-center">
+                
+                <ul>
+                <h1 className="font-semibold">Kids</h1>
+                  <li>Shirts </li>
+                  <li>Pants</li>
+                  <li>shorts</li>
+                  <li>Sleepware</li>
+                  <li>Sets</li>
+                  
 
-              {
-                loggedInUser?.isAdmin && 
-              
-                <MenuItem  onClick={handleCloseUserMenu}>
-                  <Typography component={Link} color={'text.primary'} sx={{textDecoration:"none"}} to="/admin/add-product" textAlign="center">Add new Product</Typography>
-                </MenuItem>
-              
-              }
-              {settings.map((setting) => (
-                <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
-                  <Typography component={Link} color={'text.primary'} sx={{textDecoration:"none"}} to={setting.to} textAlign="center">{setting.name}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-            {/* <Typography variant='h6' fontWeight={300}>{is480?`${userInfo?.name.toString().split(" ")[0]}`:`Hey👋, ${userInfo?.name}`}</Typography> */}
-            {/* {loggedInUser.isAdmin && <Button variant='contained'>Admin</Button>} */}
-            {loggedInUser ? (
-              loggedInUser.isAdmin ? (
-                "Admin Panel"
-              ) :(
-                `Hey, ${userInfo?.name || "Guest"}`
-              )
-            ):(
-              <Button component={Link} to="/login" variant='outlined' sx={{textTransform:"none"}}>Sign In</Button>
+                </ul>
+                </div>
+               
+                
+                <div className="w-1/4 flex flex-col  items-center">
+                <ul>
+                <h1 className="font-semibold">Gifts</h1>
+                  <li>
+                    Gifts
+                  </li>
+                </ul>
+                </div>
+                
+              </div>
             )}
-            <Stack sx={{flexDirection:"row",columnGap:"1rem",alignItems:"center",justifyContent:"center"}}>
+          </div>
 
-            
-            {
-            cartItems?.length>0 && 
-            <Badge  badgeContent={cartItems.length} color='error'>
-              <IconButton onClick={()=>navigate("/cart")}>
-                <ShoppingCartOutlinedIcon />
-                </IconButton>
-            </Badge>
-            }
-            
-            {
-              !loggedInUser?.isAdmin &&
-                  <Stack>
-                      <Badge badgeContent={wishlistItems?.length} color='error'>
-                          <IconButton component={Link} to={"/wishlist"}><FavoriteBorderIcon /></IconButton>
-                      </Badge>
-                  </Stack>
-            }
-            {
-              isProductList && <IconButton onClick={handleToggleFilters}><TuneIcon sx={{color:isProductFilterOpen?"black":""}}/></IconButton>
-            }
-            
-            </Stack>
-          </Stack>
-        </Toolbar>
-    </AppBar>
+          <Link to="/" className="text-black text-sm">
+            ABOUT
+          </Link>
+          <Link to="/" className="text-black text-sm">
+            CONTACT
+          </Link>
+          <Link to="/" className="text-black text-sm">
+            MORE
+          </Link>
+        </div>
+
+        {/* Left section */}
+        <div className="w-2/6 flex justify-center">
+          <h2 className="text-xl sm:text-3xl font-semibold">BAROZA</h2>
+        </div>
+
+        {/* Right section */}
+        <div className="flex items-center justify-end gap-5 w-2/6 ">
+          <Link to="/login" className="hidden md:block">
+            <Profile className="w-5 h-5" />
+          </Link>
+          <Link to="/contact" className="hidden md:block">
+            <Love className="w-6 h-6" />
+          </Link>
+          <Link to="/contact" className="hidden md:block">
+            <Cart className="w-6 h-6" />
+          </Link>
+
+          {/* Hamburger menu */}
+          <div className="flex flex-row space-x-1 mt-1  sm:hidden">
+            <Link
+              to="/login"
+              className="text-black text-sm mb-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Profile height="18px" className="w-3 h-3 inline mr-2" />
+            </Link>
+            <Link
+              to="/contact"
+              className="text-black text-sm mb-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Cart height="20px" className="w-3 h-3 inline mr-2" />
+            </Link>
+            <Link
+              to="/contact"
+              className="text-black text-sm"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Love height="20px" className="w-3 h-3 inline mr-2" />
+            </Link>
+          </div>
+          <button
+            className="block md:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="absolute top-[65px] right-0 w-1/2 bg-white shadow-md z-[999] flex flex-col items-center p-4">
+          <Link
+            to="/"
+            className="text-black text-sm mb-2"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            SHOP
+          </Link>
+          <Link
+            to="/"
+            className="text-black text-sm mb-2"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            ABOUT
+          </Link>
+          <Link
+            to="/"
+            className="text-black text-sm mb-2"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            CONTACT
+          </Link>
+          <Link
+            to="/"
+            className="text-black text-sm mb-2"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            MORE
+          </Link>
+        </div>
+      )}
+    </div>
   );
-}
+};
+
+// export default Navbar;

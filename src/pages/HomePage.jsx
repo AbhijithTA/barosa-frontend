@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Navbar } from '../features/navigation/components/Navbar'
-import { ProductList } from '../features/products/components/ProductList'
+import { ProductList } from '../features/products/components/ProductList.jsx'
 import { resetAddressStatus, selectAddressStatus } from '../features/address/AddressSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import {Footer} from '../features/footer/Footer'

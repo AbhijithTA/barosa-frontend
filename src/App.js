@@ -1,19 +1,14 @@
 import { useSelector } from "react-redux";
-import {
-  Navigate,
-  Route,
-  RouterProvider,
-  createBrowserRouter,
-  createRoutesFromElements,
-} from "react-router-dom";
-import {
-  selectIsAuthChecked,
-  selectLoggedInUser,
-} from "./features/auth/AuthSlice";
+import { Navigate,Route,RouterProvider,createBrowserRouter, createRoutesFromElements,} from "react-router-dom";
 import { Logout } from "./features/auth/components/Logout";
 import { Protected } from "./features/auth/components/Protected";
+import {selectIsAuthChecked,selectLoggedInUser,} from "./features/auth/AuthSlice";
+
 import { useAuthCheck } from "./hooks/useAuth/useAuthCheck";
 import { useFetchLoggedInUserDetails } from "./hooks/useAuth/useFetchLoggedInUserDetails";
+
+import { AdminDashboardPage } from "./pages/AdminDashboardPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
 import {
   AddProductPage,
   AdminOrdersPage,
@@ -32,12 +27,12 @@ import {
   UserProfilePage,
   WishlistPage,
 } from "./pages";
-import { AdminDashboardPage } from "./pages/AdminDashboardPage";
-import { NotFoundPage } from "./pages/NotFoundPage";
+
 
 function App() {
   const isAuthChecked = useSelector(selectIsAuthChecked);
   const loggedInUser = useSelector(selectLoggedInUser);
+
 
   useAuthCheck();
   useFetchLoggedInUserDetails(loggedInUser);
@@ -76,11 +71,15 @@ function App() {
           </> )}
 
         <Route path="*" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </>
     )
   );
 
   return isAuthChecked ? <RouterProvider router={routes} /> : "";
+  
+
+ 
 }
 
 export default App;
