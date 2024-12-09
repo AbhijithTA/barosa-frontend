@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {FormHelperText, Stack, TextField, Typography,Box, useTheme, useMediaQuery} from '@mui/material'
 import React, { useEffect } from 'react'
 import Lottie from 'lottie-react'
@@ -10,7 +11,7 @@ import {selectLoggedInUser, signupAsync,selectSignupStatus, selectSignupError, c
 import { toast } from 'react-toastify'
 import { MotionConfig , motion} from 'framer-motion'
 
-export const Signup = () => {
+export const   Signup = () => {
   const dispatch=useDispatch()
   const status=useSelector(selectSignupStatus)
   const error=useSelector(selectSignupError)

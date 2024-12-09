@@ -8,12 +8,12 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { Link, useNavigate } from 'react-router-dom';
-import { Badge, Button, Chip, Stack, useMediaQuery, useTheme } from '@mui/material';
+import { Badge, Button,  Stack, useMediaQuery, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUserInfo } from '../../user/UserSlice';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { selectCartItems } from '../../cart/CartSlice';
-import { selectLoggedInUser } from '../../auth/AuthSlice';
+import { logoutAsync, selectLoggedInUser } from '../../auth/AuthSlice';
 import { selectWishlistItems } from '../../wishlist/WishlistSlice';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import TuneIcon from '@mui/icons-material/Tune';
@@ -47,19 +47,23 @@ export const Navbar=({isProductList=false})=> {
     dispatch(toggleFilters())
   }
 
+
   const settings = [
     {name:"Home",to:"/"},
+    {name:"All products",to:"/admin/dashboard"},
     {name:'Profile',to:loggedInUser?.isAdmin?"/admin/profile":"/profile"},
     {name:loggedInUser?.isAdmin?'Orders':'My orders',to:loggedInUser?.isAdmin?"/admin/orders":"/orders"},
-    {name:'Logout',to:"/logout"},
+    {name:'Logout', to:"/logout"},
   ];
+
+
 
   return (
     <AppBar position="sticky" sx={{backgroundColor:"white",boxShadow:"none",color:"text.primary"}}>
         <Toolbar sx={{p:1,height:"4rem",display:"flex",justifyContent:"space-around"}}>
 
           <Typography variant="h6" noWrap component="a" href="/" sx={{ mr: 2, display: { xs: 'none', md: 'flex' },fontWeight: 700, letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none', }}>
-            MERN SHOP
+            BAROSA 
           </Typography>
 
 
@@ -67,7 +71,7 @@ export const Navbar=({isProductList=false})=> {
           <Stack flexDirection={'row'} alignItems={'center'} justifyContent={'center'} columnGap={2}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={userInfo?.name} src="null" />
+                <Avatar alt={userInfo?.name || "Guest"} src="null" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -96,13 +100,22 @@ export const Navbar=({isProductList=false})=> {
               
               }
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
                   <Typography component={Link} color={'text.primary'} sx={{textDecoration:"none"}} to={setting.to} textAlign="center">{setting.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
-            <Typography variant='h6' fontWeight={300}>{is480?`${userInfo?.name.toString().split(" ")[0]}`:`Hey👋, ${userInfo?.name}`}</Typography>
-            {loggedInUser.isAdmin && <Button variant='contained'>Admin</Button>}
+            {/* <Typography variant='h6' fontWeight={300}>{is480?`${userInfo?.name.toString().split(" ")[0]}`:`Hey👋, ${userInfo?.name}`}</Typography> */}
+            {/* {loggedInUser.isAdmin && <Button variant='contained'>Admin</Button>} */}
+            {loggedInUser ? (
+              loggedInUser.isAdmin ? (
+                "Admin Panel"
+              ) :(
+                `Hey, ${userInfo?.name || "Guest"}`
+              )
+            ):(
+              <Button component={Link} to="/login" variant='outlined' sx={{textTransform:"none"}}>Sign In</Button>
+            )}
             <Stack sx={{flexDirection:"row",columnGap:"1rem",alignItems:"center",justifyContent:"center"}}>
 
             
