@@ -51,11 +51,11 @@ export const Login = () => {
   },[status])
 
   const handleLogin=(data)=>{
-    console.log("Form Data:", data); 
+    
     const cred={...data}
     delete cred.confirmPassword
     dispatch(loginAsync(cred))
-    console.log("Credentials being sent:", cred);
+    
   }
 
   return (

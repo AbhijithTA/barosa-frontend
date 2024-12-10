@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   FormControl,
   Grid,
@@ -20,6 +21,7 @@ import {
   selectProductTotalResults,
   selectProducts,
   toggleFilters,
+  
 } from "../ProductSlice";
 import { ProductCard } from "./ProductCard";
 import Accordion from "@mui/material/Accordion";
@@ -42,6 +44,7 @@ import {
   selectWishlistItemDeleteStatus,
   selectWishlistItems,
 } from "../../wishlist/WishlistSlice";
+
 import { selectLoggedInUser } from "../../auth/AuthSlice";
 import { toast } from "react-toastify";
 import {
@@ -95,6 +98,7 @@ export const ProductList = () => {
   const cartItemAddStatus = useSelector(selectCartItemAddStatus);
 
   const isProductFilterOpen = useSelector(selectProductIsFilterOpen);
+
 
   const dispatch = useDispatch();
 
@@ -382,6 +386,9 @@ export const ProductList = () => {
                   </FormControl>
                 </Stack>
               </Stack>
+
+              {/* title */}
+             <h1>featured product</h1>
 
               {/* product grid */}
               <Grid

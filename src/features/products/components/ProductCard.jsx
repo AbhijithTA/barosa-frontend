@@ -7,7 +7,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
@@ -55,8 +55,12 @@ export const ProductCard = ({
 
   const handleAddToCart = async (e) => {
     e.stopPropagation();
-    const data = { user: loggedInUser?._id, product: id };
-    dispatch(addToCartAsync(data));
+    if (!loggedInUser) {
+      navigate("/login");
+    } else {
+      const data = { user: loggedInUser?._id, product: id };
+      dispatch(addToCartAsync(data));
+    }
   };
 
   return (
@@ -135,10 +139,32 @@ export const ProductCard = ({
                 alignItems: "center",
               }}
             >
-              <Typography>${price}</Typography>
+              <Typography>AED  {price}</Typography>
               {!isWishlistCard
                 ? isProductAlreadyInCart
-                  ? ""
+                  ? <motion.button
+                  style={{
+                    padding: "10px 15px",
+                    borderRadius: "3px",
+                    outline: "none",
+                    border: "none",
+                    backgroundColor: "#d1d5db",
+                    color: "#6b7280",
+                    fontSize: is408 ? ".9rem" : is488 ? ".7rem" : ".9rem",
+                    cursor: "not-allowed",
+                  }}
+                  disabled
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      columnGap: ".5rem",
+                    }}
+                  >
+                    <p>Already in Cart</p>
+                  </div>
+                </motion.button>
                   : !isAdminCard && (
                       <motion.button
                         whileHover={{ scale: 1.03 }}
