@@ -8,6 +8,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Footer } from "../features/footer/Footer";
 import { ProductFeatured } from "../features/products/components/ProductFeatured.jsx";
+import ShopByCategory from "../features/products/components/ProductCategoryBanner.jsx";
 
 export const HomePage = () => {
   const dispatch = useDispatch();
@@ -22,9 +23,12 @@ export const HomePage = () => {
   return (
     <>
       <Navbar isProductList={true} />
-      <ProductList />
-      <ProductFeatured />
-      <Footer />
+      <div className="pt-[65px]">
+        <ProductList />
+        <ProductFeatured />
+        <ShopByCategory />
+        <Footer />
+      </div>
     </>
   );
 };

@@ -7,7 +7,9 @@ export const UserOrdersPage = () => {
   return (
     <>
     <Navbar/>
+    <div className='pt-[55px]'>
     <UserOrders/>
+    </div>
     <Footer/>
     </>
   )

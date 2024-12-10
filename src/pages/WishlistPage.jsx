@@ -7,7 +7,9 @@ export const WishlistPage = () => {
   return (
     <>
     <Navbar/>
+    <div className='pt-[45px]'>
     <Wishlist/>
+    </div>
     <Footer/>
     </>
   )

@@ -7,8 +7,10 @@ export const CartPage = () => {
   return (
     <>
     <Navbar/>
+    <div className='pt-[65px]'>
     <Cart/>
     <Footer/>
+    </div>
     </>
   )
 }
