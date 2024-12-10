@@ -388,7 +388,7 @@ export const ProductList = () => {
               </Stack>
 
               {/* title */}
-             <h1>featured product</h1>
+             <h1 className="text-2xl font-semibold text-center">NEW ARRIVALS</h1>
 
               {/* product grid */}
               <Grid
