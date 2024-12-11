@@ -6,7 +6,10 @@ export const ProductUpdatePage = () => {
   return (
     <>
     <Navbar/>
+    <div className='pt-[55px]'>
     <ProductUpdate/>
+    </div>
+    
     </>
   )
 }

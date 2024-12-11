@@ -6,7 +6,9 @@ export const AddProductPage = () => {
   return (
     <>
     <Navbar/>
+    <div className='pt-[55px]'>
     <AddProduct/>
+    </div>
     </>
   )
 }

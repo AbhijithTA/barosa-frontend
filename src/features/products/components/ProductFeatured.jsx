@@ -89,7 +89,7 @@ export const ProductFeatured = () => {
               />
             ))}
           </Grid>
-          <div className="bg-yellow-400 text-black text-center py-8 mt-8 overflow-hidden">
+          <div className="bg-black/70 text-white text-center py-8 mt-8 overflow-hidden">
             <motion.div
               className="whitespace-nowrap font-bold text-lg gap-10 flex"
               animate={{ x: ["100%", "-100%"] }}

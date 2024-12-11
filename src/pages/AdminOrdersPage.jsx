@@ -6,7 +6,9 @@ export const AdminOrdersPage = () => {
   return (
     <>
     <Navbar/>
-    <AdminOrders/>
+    <div className='pt-[55px]'>
+         <AdminOrders/>
+    </div>
     </>
   )
 }

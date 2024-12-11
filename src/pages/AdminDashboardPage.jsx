@@ -6,7 +6,9 @@ export const AdminDashboardPage = () => {
   return (
     <>
     <Navbar isProductList={true}/>
-    <AdminDashBoard/>
+    <div className='pt-[55px]'>
+     <AdminDashBoard/>
+    </div>
     </>
   )
 }

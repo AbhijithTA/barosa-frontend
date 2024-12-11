@@ -43,21 +43,20 @@ export const Navbar = () => {
     dispatch(logoutAsync());
     navigate("/login");
   };
-  
 
-   console.log(loggedInUser);
+  const [expandedCategory, setExpandedCategory] = useState(null); // State to track expanded category
+  const [expandedSubCategory, setexpandedSubCategory] = useState(null);
 
-   const [expandedCategory, setExpandedCategory] = useState(null); // State to track expanded category
-   const [expandedSubCategory , setexpandedSubCategory] = useState(null);
-   
-   const toggleCategory = (category) => {
-     setExpandedCategory((prev) => (prev === category ? null : category)); // Toggle the category
-   };
-    
-   const toggleSubCategory = (subcategory) => {
-    setexpandedSubCategory((prev) => (prev === subcategory ? null : subcategory));
-   }
- 
+  const toggleCategory = (category) => {
+    setExpandedCategory((prev) => (prev === category ? null : category)); // Toggle the category
+  };
+
+  const toggleSubCategory = (subcategory) => {
+    setexpandedSubCategory((prev) =>
+      prev === subcategory ? null : subcategory
+    );
+  };
+
   return (
     <div className="fixed top-0 w-full h-[65px] bg-white text-black shadow-md z-[1000]">
       <div className="flex items-center justify-between px-4 md:px-8 h-full">
@@ -89,7 +88,7 @@ export const Navbar = () => {
             {shopDropdown && (
               <div className="absolute left-0 bg-white shadow-lg z-10 w-[96vw] mt-10 flex flex-wrap justify-between py-8">
                 <div className="w-1/4 flex flex-col items-center text-left">
-                  <ul className="text-sm text-black/70 " >
+                  <ul className="text-sm text-black/70 cursor-pointer ">
                     <h1 className="font-semibold text-lg text-black">Women</h1>
                     <li className="hover:text-black">Mid Dress</li>
                     <li className="hover:text-black">Sets</li>
@@ -103,8 +102,10 @@ export const Navbar = () => {
                 </div>
 
                 <div className="w-1/4 flex flex-col items-center text-left">
-                <ul className="text-sm text-black/70 cursor-pointer" >
-                    <h1 className="font-semibold text-lg text-left text-black">Men</h1>
+                  <ul className="text-sm text-black/70 cursor-pointer">
+                    <h1 className="font-semibold text-lg text-left text-black">
+                      Men
+                    </h1>
                     <li className="hover:text-black">Shirts</li>
                     <li className="hover:text-black">Pants</li>
                     <li className="hover:text-black">Casual Pants</li>
@@ -117,22 +118,24 @@ export const Navbar = () => {
                 </div>
 
                 <div className="w-1/4 flex flex-col items-center">
-                <ul className="text-sm text-black/70 cursor-pointer" >
-
-                <h1 className="font-semibold text-lg text-left text-black">Kids</h1>
-                   <li className="hover:text-black">Shirts</li>
-                   <li className="hover:text-black">Pants</li>
-                   <li className="hover:text-black">Shorts</li>
-                   <li className="hover:text-black">Sleepwear</li>
-                   <li className="hover:text-black">Sets</li>
+                  <ul className="text-sm text-black/70 cursor-pointer">
+                    <h1 className="font-semibold text-lg text-left text-black">
+                      Kids
+                    </h1>
+                    <li className="hover:text-black">Shirts</li>
+                    <li className="hover:text-black">Pants</li>
+                    <li className="hover:text-black">Shorts</li>
+                    <li className="hover:text-black">Sleepwear</li>
+                    <li className="hover:text-black">Sets</li>
                   </ul>
                 </div>
 
                 <div className="w-1/4 flex flex-col items-center">
-                <ul className="text-sm text-black/70 cursor-pointer" >
-
-                <h1 className="font-semibold text-lg text-left text-black">Gifts</h1>
-                <li className="hover:text-black">Gifts</li>
+                  <ul className="text-sm text-black/70 cursor-pointer">
+                    <h1 className="font-semibold text-lg text-left text-black">
+                      Gifts
+                    </h1>
+                    <li className="hover:text-black">Gifts</li>
                   </ul>
                 </div>
               </div>
@@ -159,36 +162,47 @@ export const Navbar = () => {
         <div className="flex items-center justify-end gap-5 w-2/6">
           {loggedInUser ? (
             <>
+              {!loggedInUser.isAdmin && (
+                <>
+                  <div className="hidden sm:block">
+                    <IconWithBadge
+                      Icon={Love}
+                      count={wishlistItemsCount}
+                      onClick={() => handleRedirect("/wishlist")}
+                    />
+                  </div>
 
+                  <IconWithBadge
+                    Icon={Cart}
+                    count={cartItemsCount}
+                    onClick={() => handleRedirect("/cart")}
+                  />
+                </>
+              )}
 
-               <div className="hidden sm:block">
-              <IconWithBadge 
-                Icon={Love} 
-                count={wishlistItemsCount} 
-                onClick={() => handleRedirect("/wishlist")} 
-                
-              />
-              </div>
-
-              <IconWithBadge 
-                Icon={Cart} 
-                count={cartItemsCount} 
-                onClick={() => handleRedirect("/cart")} 
-              />
-              <ProfileIcon 
-                name={loggedInUser.name} 
-                isAdmin={loggedInUser.isAdmin} 
-                handleLogout={handleLogout} 
-                handleRedirect={handleRedirect} 
-                setProfileDropdown={setProfileDropdown} 
-                profileDropdown={profileDropdown} 
+              <ProfileIcon
+                name={loggedInUser.name}
+                isAdmin={loggedInUser.isAdmin}
+                handleLogout={handleLogout}
+                handleRedirect={handleRedirect}
+                setProfileDropdown={setProfileDropdown}
+                profileDropdown={profileDropdown}
               />
             </>
           ) : (
             <>
-              <Profile onClick={() => navigate("/login")} className="w-5 h-5 cursor-pointer" />
-              <Love onClick={() => navigate("/login")} className="w-6 h-6 cursor-pointer" />
-              <Cart onClick={() => navigate("/login")} className="w-6 h-6 cursor-pointer" />
+              <Profile
+                onClick={() => navigate("/login")}
+                className="w-5 h-5 cursor-pointer"
+              />
+              <Love
+                onClick={() => navigate("/login")}
+                className="w-6 h-6 cursor-pointer"
+              />
+              <Cart
+                onClick={() => navigate("/login")}
+                className="w-6 h-6 cursor-pointer"
+              />
             </>
           )}
         </div>
@@ -218,101 +232,109 @@ export const Navbar = () => {
             </svg>
           </button>
           {mobileMenuOpen && (
-  <div className="absolute top-[65px] right-0 w-1/2 h-screen bg-white shadow-lg z-[1000]">
-    <div className="py-4 px-6">
-      <h1 className="font-semibold">Hey {loggedInUser.name}</h1>
-      <Link to="/" className="block text-black mt-4 font-semibold">
-        Home
-      </Link>
-      <h3
-        className="font-semibold  cursor-pointer"
-        onClick={() => toggleCategory("shop")}
-      >
-        Shop
-      </h3>
-      {expandedCategory === "shop" && (
-        <ul className="ml-4">
-          <li
-            className="mb-2 cursor-pointer font-semibold"
-            onClick={() => toggleSubCategory("women")} // Corrected handler
-          >
-            Women
-          </li>
-          {expandedSubCategory === "women" && (
-            <ul className="ml-4 text-sm">
-              <li>Top</li>
-              <li>Mid Dress</li>
-              <li>Long Dress</li>
-              <li>Sets</li>
-              <li>Pants</li>
-              <li>Shorts</li>
-              <li>Sleepwear</li>
-              <li>Blazers</li>
-            </ul>
+            <div className="absolute top-[65px] right-0 w-1/2 h-screen bg-white shadow-lg z-[1000]">
+              <div className="py-4 px-6">
+                <h1 className="font-semibold">Hey {loggedInUser.name}</h1>
+                <Link to="/" className="block text-black mt-4 font-semibold">
+                  Home
+                </Link>
+                <h3
+                  className="font-semibold  cursor-pointer"
+                  onClick={() => toggleCategory("shop")}
+                >
+                  Shop
+                </h3>
+                {expandedCategory === "shop" && (
+                  <ul className="ml-4">
+                    <li
+                      className="mb-2 cursor-pointer font-semibold"
+                      onClick={() => toggleSubCategory("women")} // Corrected handler
+                    >
+                      Women
+                    </li>
+                    {expandedSubCategory === "women" && (
+                      <ul className="ml-4 text-sm">
+                        <li>Top</li>
+                        <li>Mid Dress</li>
+                        <li>Long Dress</li>
+                        <li>Sets</li>
+                        <li>Pants</li>
+                        <li>Shorts</li>
+                        <li>Sleepwear</li>
+                        <li>Blazers</li>
+                      </ul>
+                    )}
+                    <li
+                      className="mb-2 cursor-pointer font-semibold"
+                      onClick={() => toggleSubCategory("men")} // Corrected handler
+                    >
+                      Men
+                    </li>
+                    {expandedSubCategory === "men" && (
+                      <ul className="ml-4 text-sm">
+                        <li>Shirts</li>
+                        <li>Pants</li>
+                        <li>Casual Pants</li>
+                        <li>Suits</li>
+                        <li>Shorts</li>
+                        <li>Sleepwear</li>
+                        <li>Blazers</li>
+                        <li>Sets</li>
+                      </ul>
+                    )}
+                    <li
+                      className="mb-2 cursor-pointer font-semibold"
+                      onClick={() => toggleSubCategory("kids")} // Corrected handler
+                    >
+                      Kids
+                    </li>
+                    {expandedSubCategory === "kids" && (
+                      <ul className="ml-4 text-sm">
+                        <li>Shirts</li>
+                        <li>Pants</li>
+                        <li>Shorts</li>
+                        <li>Sleepwear</li>
+                        <li>Sets</li>
+                      </ul>
+                    )}
+                    <li
+                      className="mb-2 cursor-pointer font-semibold"
+                      onClick={() => toggleSubCategory("gifts")} // Corrected handler
+                    >
+                      Gifts
+                    </li>
+                    {expandedSubCategory === "gifts" && (
+                      <ul className="ml-4 text-sm">
+                        <li>Gifts</li>
+                      </ul>
+                    )}
+                  </ul>
+                )}
+                <Link
+                  to="/about"
+                  className="block text-black mt-4 font-semibold"
+                >
+                  About
+                </Link>
+                <Link to="/contact" className="block text-black font-semibold">
+                  Contact
+                </Link>
+              </div>
+            </div>
           )}
-          <li
-            className="mb-2 cursor-pointer font-semibold"
-            onClick={() => toggleSubCategory("men")} // Corrected handler
-          >
-            Men
-          </li>
-          {expandedSubCategory === "men" && (
-            <ul className="ml-4 text-sm">
-              <li>Shirts</li>
-              <li>Pants</li>
-              <li>Casual Pants</li>
-              <li>Suits</li>
-              <li>Shorts</li>
-              <li>Sleepwear</li>
-              <li>Blazers</li>
-              <li>Sets</li>
-            </ul>
-          )}
-          <li
-            className="mb-2 cursor-pointer font-semibold"
-            onClick={() => toggleSubCategory("kids")} // Corrected handler
-          >
-            Kids
-          </li>
-          {expandedSubCategory === "kids" && (
-            <ul className="ml-4 text-sm">
-              <li>Shirts</li>
-              <li>Pants</li>
-              <li>Shorts</li>
-              <li>Sleepwear</li>
-              <li>Sets</li>
-            </ul>
-          )}
-          <li
-            className="mb-2 cursor-pointer font-semibold"
-            onClick={() => toggleSubCategory("gifts")} // Corrected handler
-          >
-            Gifts
-          </li>
-          {expandedSubCategory === "gifts" && (
-            <ul className="ml-4 text-sm">
-              <li>Gifts</li>
-            </ul>
-          )}
-        </ul>
-      )}
-      <Link to="/about" className="block text-black mt-4 font-semibold">
-        About
-      </Link>
-      <Link to="/contact" className="block text-black font-semibold">
-        Contact
-      </Link>
-    </div>
-  </div>
-)}
-
         </div>
       </div>
     </div>
   );
 };
 
-const ProfileIcon = ({ name, isAdmin, handleLogout, setProfileDropdown, profileDropdown }) => (
+const ProfileIcon = ({
+  name,
+  isAdmin,
+  handleLogout,
+  setProfileDropdown,
+  profileDropdown,
+}) => (
   <div className="relative flex items-center sm:gap-2 dropdown-container">
     <Profile
       className="h-3 w-3 cursor-pointer"
@@ -323,22 +345,37 @@ const ProfileIcon = ({ name, isAdmin, handleLogout, setProfileDropdown, profileD
       <div className="absolute top-10 right-4 mt-2 bg-white border border-gray-200 rounded shadow-md text-center">
         {isAdmin ? (
           <>
-            <Link to="/admin-dashboard" className="block px-4 py-2 text-sm hover:bg-gray-100">
+            <Link
+              to="/admin-dashboard"
+              className="block px-4 py-2 text-sm hover:bg-gray-100"
+            >
               Admin Dashboard
             </Link>
-            <Link to="/admin/add-product" className="block px-4 py-2 text-sm hover:bg-gray-100">
+            <Link
+              to="/admin/add-product"
+              className="block px-4 py-2 text-sm hover:bg-gray-100"
+            >
               Add Products
             </Link>
-            <Link to="/admin/orders" className="block px-4 py-2 text-sm hover:bg-gray-100">
+            <Link
+              to="/admin/orders"
+              className="block px-4 py-2 text-sm hover:bg-gray-100"
+            >
               Manage Orders
             </Link>
           </>
         ) : (
           <>
-            <Link to="/profile" className="block px-8 py-2 text-sm text-left hover:bg-gray-100">
+            <Link
+              to="/profile"
+              className="block px-8 py-2 text-sm text-left hover:bg-gray-100"
+            >
               Profile
             </Link>
-            <Link to="/orders" className="block px-4 py-2 text-sm hover:bg-gray-100">
+            <Link
+              to="/orders"
+              className="block px-4 py-2 text-sm hover:bg-gray-100"
+            >
               My Orders
             </Link>
           </>

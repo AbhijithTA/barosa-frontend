@@ -7,7 +7,9 @@ export const ProductDetailsPage = () => {
   return (
     <>
     <Navbar/>
+    <div className='pt-[55px]'>
     <ProductDetails/>
+    </div>
     <Footer/>
     </>
   )
