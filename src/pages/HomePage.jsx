@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Navbar } from "../features/navigation/components/Navbar";
-import { ProductList } from "../features/products/components/ProductList.jsx";
+import { NewArrivalProductComponent } from "../features/products/components/ProductList.jsx";
 import {
   resetAddressStatus,
   selectAddressStatus,
@@ -24,8 +24,10 @@ export const HomePage = () => {
     <>
       <Navbar isProductList={true} />
       <div className="pt-[65px]">
-        <ProductList />
-        <ProductFeatured />
+        <NewArrivalProductComponent />
+        <div className="pt-[50px]">
+          <ProductFeatured />
+        </div>
         <ShopByCategory />
         <Footer />
       </div>

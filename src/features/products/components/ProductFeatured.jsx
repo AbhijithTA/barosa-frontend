@@ -20,6 +20,8 @@ export const ProductFeatured = () => {
   const loggedInUser = useSelector(selectLoggedInUser);
   const wishlistItems = useSelector(selectWishlistItems);
 
+  console.log(products,"selected products")
+
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();

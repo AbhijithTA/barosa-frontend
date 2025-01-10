@@ -21,18 +21,9 @@ import {
   selectProductTotalResults,
   selectProducts,
   toggleFilters,
-  
 } from "../ProductSlice";
 import { ProductCard } from "./ProductCard";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AddIcon from "@mui/icons-material/Add";
-import { selectBrands } from "../../brands/BrandSlice";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import { selectCategories } from "../../categories/CategoriesSlice";
+
 import Pagination from "@mui/material/Pagination";
 import { ITEMS_PER_PAGE } from "../../../constants";
 import {
@@ -60,7 +51,7 @@ import {
 } from "../../cart/CartSlice";
 import { motion } from "framer-motion";
 import { ProductBanner } from "./ProductBanner.jsx";
-import ClearIcon from "@mui/icons-material/Clear";
+
 import Lottie from "lottie-react";
 
 const sortOptions = [
@@ -70,7 +61,7 @@ const sortOptions = [
 
 const bannerImages = [banner1, banner3, banner2, banner4];
 
-export const ProductList = () => {
+export const NewArrivalProductComponent = () => {
   const [filters, setFilters] = useState({});
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState(null);
@@ -83,9 +74,10 @@ export const ProductList = () => {
   const is500 = useMediaQuery(theme.breakpoints.down(500));
   const is488 = useMediaQuery(theme.breakpoints.down(488));
 
-  const brands = useSelector(selectBrands);
-  const categories = useSelector(selectCategories);
+
   const products = useSelector(selectProducts);
+  const [latestProducts, setLatestProducts] = useState([]);
+
   const totalResults = useSelector(selectProductTotalResults);
   const loggedInUser = useSelector(selectLoggedInUser);
 
@@ -98,7 +90,6 @@ export const ProductList = () => {
   const cartItemAddStatus = useSelector(selectCartItemAddStatus);
 
   const isProductFilterOpen = useSelector(selectProductIsFilterOpen);
-
 
   const dispatch = useDispatch();
 
@@ -209,6 +200,18 @@ export const ProductList = () => {
     dispatch(toggleFilters());
   };
 
+  console.log(products, "Products");
+
+  useEffect(() => {
+    if (products.length > 0) {
+      const sortedProducts = [...products]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 10);
+
+        setLatestProducts(sortedProducts)
+    }
+  }, [products]);
+
   return (
     <>
       {productFetchStatus === "pending" ? (
@@ -223,123 +226,7 @@ export const ProductList = () => {
         </Stack>
       ) : (
         <>
-          <motion.div
-            style={{
-              position: "fixed",
-              backgroundColor: "white",
-              height: "100vh",
-              padding: "1rem",
-              overflowY: "scroll",
-              width: is500 ? "100vw" : "30rem",
-              zIndex: 500,
-            }}
-            variants={{ show: { left: 0 }, hide: { left: -500 } }}
-            initial={"hide"}
-            transition={{ ease: "easeInOut", duration: 0.7, type: "spring" }}
-            animate={isProductFilterOpen === true ? "show" : "hide"}
-          >
-            {/* fitlers section */}
-            <Stack
-              mb={"5rem"}
-              sx={{ scrollBehavior: "smooth", overflowY: "scroll" }}
-            >
-              <Typography variant="h4">New Arrivals</Typography>
-
-              <IconButton
-                onClick={handleFilterClose}
-                style={{ position: "absolute", top: 15, right: 15 }}
-              >
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <ClearIcon fontSize="medium" />
-                </motion.div>
-              </IconButton>
-
-              <Stack rowGap={2} mt={4}>
-                <Typography sx={{ cursor: "pointer" }} variant="body2">
-                  Totes
-                </Typography>
-                <Typography sx={{ cursor: "pointer" }} variant="body2">
-                  Backpacks
-                </Typography>
-                <Typography sx={{ cursor: "pointer" }} variant="body2">
-                  Travel Bags
-                </Typography>
-                <Typography sx={{ cursor: "pointer" }} variant="body2">
-                  Hip Bags
-                </Typography>
-                <Typography sx={{ cursor: "pointer" }} variant="body2">
-                  Laptop Sleeves
-                </Typography>
-              </Stack>
-
-              {/* brand filters */}
-              <Stack mt={2}>
-                <Accordion>
-                  <AccordionSummary
-                    expandIcon={<AddIcon />}
-                    aria-controls="brand-filters"
-                    id="brand-filters"
-                  >
-                    <Typography>Brands</Typography>
-                  </AccordionSummary>
-
-                  <AccordionDetails sx={{ p: 0 }}>
-                    <FormGroup onChange={handleBrandFilters}>
-                      {brands?.map((brand) => (
-                        <motion.div
-                          style={{ width: "fit-content" }}
-                          whileHover={{ x: 5 }}
-                          whileTap={{ scale: 0.9 }}
-                        >
-                          <FormControlLabel
-                            sx={{ ml: 1 }}
-                            control={<Checkbox whileHover={{ scale: 1.1 }} />}
-                            label={brand.name}
-                            value={brand._id}
-                          />
-                        </motion.div>
-                      ))}
-                    </FormGroup>
-                  </AccordionDetails>
-                </Accordion>
-              </Stack>
-
-              {/* category filters */}
-              <Stack mt={2}>
-                <Accordion>
-                  <AccordionSummary
-                    expandIcon={<AddIcon />}
-                    aria-controls="brand-filters"
-                    id="brand-filters"
-                  >
-                    <Typography>Category</Typography>
-                  </AccordionSummary>
-
-                  <AccordionDetails sx={{ p: 0 }}>
-                    <FormGroup onChange={handleCategoryFilters}>
-                      {categories?.map((category) => (
-                        <motion.div
-                          style={{ width: "fit-content" }}
-                          whileHover={{ x: 5 }}
-                          whileTap={{ scale: 0.9 }}
-                        >
-                          <FormControlLabel
-                            sx={{ ml: 1 }}
-                            control={<Checkbox whileHover={{ scale: 1.1 }} />}
-                            label={category.name}
-                            value={category._id}
-                          />
-                        </motion.div>
-                      ))}
-                    </FormGroup>
-                  </AccordionDetails>
-                </Accordion>
-              </Stack>
-            </Stack>
-          </motion.div>
+          
 
           <Stack mb={"3rem"}>
             {/* banners section */}
@@ -357,38 +244,12 @@ export const ProductList = () => {
             {/* products */}
             <Stack rowGap={5} mt={is600 ? 2 : 0}>
               {/* sort options */}
-              <Stack
-                flexDirection={"row"}
-                mr={"2rem"}
-                justifyContent={"flex-end"}
-                alignItems={"center"}
-                columnGap={5}
-              >
-                <Stack alignSelf={"flex-end"} width={"12rem"}>
-                  <FormControl fullWidth>
-                    <InputLabel id="sort-dropdown">Sort</InputLabel>
-                    <Select
-                      variant="standard"
-                      labelId="sort-dropdown"
-                      label="Sort"
-                      onChange={(e) => setSort(e.target.value)}
-                      value={sort}
-                    >
-                      <MenuItem bgcolor="text.secondary" value={null}>
-                        Reset
-                      </MenuItem>
-                      {sortOptions.map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Stack>
-              </Stack>
+             
 
               {/* title */}
-             <h1 className="text-2xl font-semibold text-center">NEW ARRIVALS</h1>
+              <h1 className="text-2xl font-semibold text-center">
+                NEW ARRIVALS
+              </h1>
 
               {/* product grid */}
               <Grid
@@ -397,7 +258,7 @@ export const ProductList = () => {
                 justifyContent={"center"}
                 alignContent={"center"}
               >
-                {products.map((product) => (
+                {latestProducts.map((product) => (
                   <ProductCard
                     key={product._id}
                     id={product._id}
