@@ -27,6 +27,12 @@ import {
   UserProfilePage,
   WishlistPage,
 } from "./pages";
+<<<<<<< Updated upstream
+=======
+import { AdminCateogryPage } from "./pages/AdminCategoryPage";
+import CategoryLayout from "./features/products/pages/CategoryLayout";
+import { Navbar } from "./features/navigation/components/Navbar";
+>>>>>>> Stashed changes
 
 
 function App() {
@@ -39,7 +45,10 @@ function App() {
 
   const routes = createBrowserRouter(
     createRoutesFromElements(
+
       <>
+      
+
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -48,6 +57,7 @@ function App() {
         <Route path="/reset-password/:userId/:passwordResetToken"element={<ResetPasswordPage />}/>
         <Route exact path="/logout" element={<Protected> <Logout /></Protected> } />
         <Route exact path="/product-details/:id" element={  <ProductDetailsPage /> } />
+        <Route path="/categories/:categoryTitle" element={<CategoryLayout />} />
 
         {loggedInUser?.isAdmin ? (
           // admin routes

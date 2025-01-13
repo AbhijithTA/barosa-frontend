@@ -355,6 +355,7 @@ export const ProductList = () => {
             )}
 
             {/* products */}
+<<<<<<< Updated upstream
             <Stack rowGap={5} mt={is600 ? 2 : 0}>
               {/* sort options */}
               <Stack
@@ -434,6 +435,9 @@ export const ProductList = () => {
                 </Typography>
               </Stack>
             </Stack>
+=======
+           
+>>>>>>> Stashed changes
           </Stack>
         </>
       )}
