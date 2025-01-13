@@ -29,6 +29,9 @@ import {
 } from "./pages";
 import { AdminCateogryPage } from "./pages/AdminCategoryPage";
 
+import { Navbar } from "./features/navigation/components/Navbar";
+import CategroryLayout from "./features/products/pages/CategoryLayout";
+
 
 function App() {
   const isAuthChecked = useSelector(selectIsAuthChecked);
@@ -40,7 +43,10 @@ function App() {
 
   const routes = createBrowserRouter(
     createRoutesFromElements(
+
       <>
+      
+
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -49,6 +55,7 @@ function App() {
         <Route path="/reset-password/:userId/:passwordResetToken"element={<ResetPasswordPage />}/>
         <Route exact path="/logout" element={<Protected> <Logout /></Protected> } />
         <Route exact path="/product-details/:id" element={  <ProductDetailsPage /> } />
+        <Route path="/categories/:categoryTitle" element={<CategroryLayout />} />
 
         {loggedInUser?.isAdmin ? (
           // admin routes

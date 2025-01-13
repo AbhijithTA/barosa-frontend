@@ -21,11 +21,11 @@ import {
   selectProductTotalResults,
   selectProducts,
   toggleFilters,
-} from "../ProductSlice";
-import { ProductCard } from "./ProductCard";
+} from "../ProductSlice.jsx";
+import { ProductCard } from "./ProductCard.jsx";
 
 import Pagination from "@mui/material/Pagination";
-import { ITEMS_PER_PAGE } from "../../../constants";
+import { ITEMS_PER_PAGE } from "../../../constants/index.js";
 import {
   createWishlistItemAsync,
   deleteWishlistItemByIdAsync,
@@ -34,9 +34,9 @@ import {
   selectWishlistItemAddStatus,
   selectWishlistItemDeleteStatus,
   selectWishlistItems,
-} from "../../wishlist/WishlistSlice";
+} from "../../wishlist/WishlistSlice.jsx";
 
-import { selectLoggedInUser } from "../../auth/AuthSlice";
+import { selectLoggedInUser } from "../../auth/AuthSlice.jsx";
 import { toast } from "react-toastify";
 import {
   banner1,
@@ -44,11 +44,11 @@ import {
   banner3,
   banner4,
   loadingAnimation,
-} from "../../../assets";
+} from "../../../assets/index.js";
 import {
   resetCartItemAddStatus,
   selectCartItemAddStatus,
-} from "../../cart/CartSlice";
+} from "../../cart/CartSlice.jsx";
 import { motion } from "framer-motion";
 import { ProductBanner } from "./ProductBanner.jsx";
 
@@ -61,7 +61,7 @@ const sortOptions = [
 
 const bannerImages = [banner1, banner3, banner2, banner4];
 
-export const NewArrivalProductComponent = () => {
+export const HeroBanner = () => {
   const [filters, setFilters] = useState({});
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState(null);
@@ -73,7 +73,6 @@ export const NewArrivalProductComponent = () => {
   const is600 = useMediaQuery(theme.breakpoints.down(600));
   const is500 = useMediaQuery(theme.breakpoints.down(500));
   const is488 = useMediaQuery(theme.breakpoints.down(488));
-
 
   const products = useSelector(selectProducts);
   const [latestProducts, setLatestProducts] = useState([]);
@@ -208,7 +207,7 @@ export const NewArrivalProductComponent = () => {
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 10);
 
-        setLatestProducts(sortedProducts)
+      setLatestProducts(sortedProducts);
     }
   }, [products]);
 
@@ -226,8 +225,6 @@ export const NewArrivalProductComponent = () => {
         </Stack>
       ) : (
         <>
-          
-
           <Stack mb={"3rem"}>
             {/* banners section */}
             {!is600 && (
@@ -240,61 +237,6 @@ export const NewArrivalProductComponent = () => {
                 <ProductBanner images={bannerImages} />
               </Stack>
             )}
-
-            {/* products */}
-            <Stack rowGap={5} mt={is600 ? 2 : 0}>
-              {/* sort options */}
-             
-
-              {/* title */}
-              <h1 className="text-2xl font-semibold text-center">
-                NEW ARRIVALS
-              </h1>
-
-              {/* product grid */}
-              <Grid
-                gap={is700 ? 1 : 2}
-                container
-                justifyContent={"center"}
-                alignContent={"center"}
-              >
-                {latestProducts.map((product) => (
-                  <ProductCard
-                    key={product._id}
-                    id={product._id}
-                    title={product.title}
-                    thumbnail={product.thumbnail}
-                    brand={product.brand.name}
-                    price={product.price}
-                    handleAddRemoveFromWishlist={handleAddRemoveFromWishlist}
-                  />
-                ))}
-              </Grid>
-
-              {/* pagination */}
-              <Stack
-                alignSelf={is488 ? "center" : "flex-end"}
-                mr={is488 ? 0 : 5}
-                rowGap={2}
-                p={is488 ? 1 : 0}
-              >
-                <Pagination
-                  size={is488 ? "medium" : "large"}
-                  page={page}
-                  onChange={(e, page) => setPage(page)}
-                  count={Math.ceil(totalResults / ITEMS_PER_PAGE)}
-                  variant="outlined"
-                  shape="rounded"
-                />
-                <Typography textAlign={"center"}>
-                  Showing {(page - 1) * ITEMS_PER_PAGE + 1} to{" "}
-                  {page * ITEMS_PER_PAGE > totalResults
-                    ? totalResults
-                    : page * ITEMS_PER_PAGE}{" "}
-                  of {totalResults} results
-                </Typography>
-              </Stack>
-            </Stack>
           </Stack>
         </>
       )}

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Navbar } from "../features/navigation/components/Navbar";
-import { NewArrivalProductComponent } from "../features/products/components/ProductList.jsx";
+import { HeroBanner, NewArrivalProductComponent } from "../features/products/components/HeroBanner.jsx";
 import {
   resetAddressStatus,
   selectAddressStatus,
@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Footer } from "../features/footer/Footer";
 import { ProductFeatured } from "../features/products/components/ProductFeatured.jsx";
 import ShopByCategory from "../features/products/components/ProductCategoryBanner.jsx";
+import NewArrivalCategory from "../features/products/components/NewArrivalCategory.jsx";
 
 export const HomePage = () => {
   const dispatch = useDispatch();
@@ -22,9 +23,12 @@ export const HomePage = () => {
 
   return (
     <>
-      <Navbar isProductList={true} />
+      <Navbar />
       <div className="pt-[65px]">
-        <NewArrivalProductComponent />
+        <HeroBanner />
+        <div className="pt-[50px]">
+          <NewArrivalCategory />
+        </div>
         <div className="pt-[50px]">
           <ProductFeatured />
         </div>
