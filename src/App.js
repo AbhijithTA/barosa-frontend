@@ -93,6 +93,12 @@ function App() {
 
 export default App;
 
-
-// testuser
+// user
+// pahasi2898@datingel.com
 // Test@123
+
+
+
+//admin
+// demo@gmail.com
+// helloWorld@123
