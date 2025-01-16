@@ -108,13 +108,13 @@ export const AdminDashBoard = () => {
                 </IconButton>
 
 
-        <Stack rowGap={2} mt={4} >
+        {/* <Stack rowGap={2} mt={4} >
             <Typography sx={{cursor:"pointer"}} variant='body2'>Totes</Typography>
             <Typography sx={{cursor:"pointer"}} variant='body2'>Backpacks</Typography>
             <Typography sx={{cursor:"pointer"}} variant='body2'>Travel Bags</Typography>
             <Typography sx={{cursor:"pointer"}} variant='body2'>Hip Bags</Typography>
             <Typography sx={{cursor:"pointer"}} variant='body2'>Laptop Sleeves</Typography>
-        </Stack>
+        </Stack> */}
 
         {/* brand filters */}
         <Stack mt={2}>
@@ -164,6 +164,7 @@ export const AdminDashBoard = () => {
     <Stack rowGap={5} mt={is600?2:5} mb={'3rem'}>
 
         {/* sort options */}
+        
         <Stack flexDirection={'row'} mr={'2rem'} justifyContent={'flex-end'} alignItems={'center'} columnGap={5}>
 
             <Stack alignSelf={'flex-end'} width={'12rem'}>
