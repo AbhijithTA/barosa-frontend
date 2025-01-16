@@ -4,9 +4,10 @@ import CategoryCard from "./NewArrivalCategoryCard";
 
 const categories = [
   {
-    title: "Men",
+    title: "Mens",
     buttonText: "VIEW PRODUCTS",
     image: "https://img.freepik.com/free-photo/vertical-shot-successful-male-standing-with-hand-pocket_181624-44739.jpg?uid=P153408150&semt=ais_hybrid", // Replace with actual image URL
+    
   },
   {
     title: "Women",
@@ -19,7 +20,7 @@ const categories = [
     image: "https://img.freepik.com/free-photo/child-pajama_146671-13730.jpg?uid=P153408150&semt=ais_hybrid", // Replace with actual image URL
   },
   {
-    title: "Gifts And Accessories",
+    title: "Gifts",
     buttonText: "VIEW PRODUCTS",
     image: "https://img.freepik.com/free-photo/front-view-smiling-cute-kid-riding-green-skateboard-white-t-shirt-orange-shorts-blue-space_179666-1170.jpg?uid=P153408150&semt=ais_hybrid", // Replace with actual image URL
   },
