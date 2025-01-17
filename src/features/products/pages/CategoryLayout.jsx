@@ -74,27 +74,32 @@ const CategoryLayout = () => {
     const fetchProducts = async () => {
       try {
         setFetchStatus("pending"); // Set status to pending
-
-        // Fetch products
+  
+        // Ensure sort parameters are extracted correctly
+        const params = sort
+          ? { sort: sort.sort, order: sort.order }
+          : undefined;
+  
+        // Fetch products with sort and order parameters
         const productResponse = await axiosi.get(
           `/products/latest-products/${categoryTitle}`,
-          { params: sort }
+          { params }
         );
-
+  
         // Update products state
         setProducts(productResponse.data);
-
         setFetchStatus("fulfilled"); // Set status to fulfilled
       } catch (error) {
         console.error("Error fetching products:", error);
         setFetchStatus("error"); // Set status to error
       }
     };
-
+  
     fetchProducts();
-  }, [categoryTitle, filters,sort]);
-
-  console.log(sort);
+  }, [categoryTitle, sort]); // Add `sort` as a dependency
+  
+  
+  console.log(sort?.order);
 
   return (
     <>
