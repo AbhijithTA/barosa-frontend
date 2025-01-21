@@ -11,7 +11,8 @@ import { createOrderAsync, selectCurrentOrder, selectOrderStatus } from '../../o
 import { resetCartByUserIdAsync, selectCartItems } from '../../cart/CartSlice'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { SHIPPING, TAXES } from '../../../constants'
-import {motion} from 'framer-motion'
+import {motion} from 'framer-motion';
+import {loadStripe} from '@stripe/stripe-js';
 
 
 export const Checkout = () => {
@@ -54,10 +55,19 @@ export const Checkout = () => {
         dispatch(addAddressAsync(address))
     }
 
-    const handleCreateOrder=()=>{
-        const order={user:loggedInUser._id,item:cartItems,address:selectedAddress,paymentMode:selectedPaymentMethod,total:orderTotal+SHIPPING+TAXES}
-        dispatch(createOrderAsync(order))
-    }
+
+    // const makePayment = async () => {
+    //     const
+    // }
+
+    // first payment method which will take you to next page saying succesfull
+    // const handleCreateOrder=()=>{
+    //     const order={user:loggedInUser._id,item:cartItems,address:selectedAddress,paymentMode:selectedPaymentMethod,total:orderTotal+SHIPPING+TAXES}
+    //     console.log(order);
+    //     dispatch(createOrderAsync(order))
+    // }
+
+
 
   return (
     <Stack flexDirection={'row'} p={2} rowGap={10} justifyContent={'center'} flexWrap={'wrap'} mb={'5rem'} mt={2} columnGap={4} alignItems={'flex-start'}>
@@ -180,7 +190,7 @@ export const Checkout = () => {
         <Stack  width={is900?'100%':'auto'} alignItems={is900?'flex-start':''}>
             <Typography variant='h4'>Order summary</Typography>
             <Cart checkout={true}/>
-            <LoadingButton fullWidth loading={orderStatus==='pending'} variant='contained' onClick={handleCreateOrder} size='large'>Pay and order</LoadingButton>
+            <LoadingButton fullWidth loading={orderStatus==='pending'} variant='contained' onClick={makePayment} size='large'>Pay and order</LoadingButton>
         </Stack>
 
     </Stack>
