@@ -36,7 +36,8 @@ export const ProductFeatured = () => {
       setError(null);
       try {
         const response = await axiosi.get("/products/featured");
-        setFeaturedProducts(response.data);
+        console.log(response.data);
+        setFeaturedProducts(response.data.data);
         setTotalPages(response.data.totalPages);
       } catch (err) {
         console.error("Error fetching featured products", err);
@@ -105,7 +106,7 @@ export const ProductFeatured = () => {
                 id={product._id}
                 title={product.title}
                 thumbnail={product.thumbnail}
-                brand={product.brand.name}
+                // brand={product.brand.name}
                 price={product.price}
                 handleAddRemoveFromWishlist={handleAddRemoveFromWishlist}
               />

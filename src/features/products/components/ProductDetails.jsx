@@ -216,6 +216,8 @@ export const ProductDetails = () => {
     setActiveStep(step);
   };
 
+
+  console.log("product", product);
   return (
     <>
       {!(
@@ -434,7 +436,7 @@ export const ProductDetails = () => {
                   {!loggedInUser?.isAdmin && (
                     <Stack sx={{ rowGap: "1.3rem" }} width={"fit-content"}>
                       {/* colors */}
-                      <Stack
+                      {/* <Stack
                         flexDirection={"row"}
                         alignItems={"center"}
                         columnGap={is387 ? "5px" : "1rem"}
@@ -477,7 +479,7 @@ export const ProductDetails = () => {
                             </div>
                           ))}
                         </Stack>
-                      </Stack>
+                      </Stack> */}
 
                       {/* size */}
                       <Stack
@@ -493,13 +495,13 @@ export const ProductDetails = () => {
                         >
                           {SIZES.map((size) => (
                             <motion.div
-                              onClick={() => handleSizeSelect(size)}
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 1 }}
+                              onClick={() => product?.stockQuantity[size] > 0 && handleSizeSelect(size)}
+                              whileHover={product?.stockQuantity[size] > 0  ? { scale: 1.05 } : {}}
+                              whileTap={product?.stockQuantity[size] > 0  ? { scale: 1 } : {}}
                               style={{
                                 border:
                                   selectedSize === size
-                                    ? ""
+                                    ? "2px solid #DB4444"
                                     : "1px solid grayText",
                                 borderRadius: "8px",
                                 width: "30px",
@@ -507,13 +509,16 @@ export const ProductDetails = () => {
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
-                                cursor: "pointer",
+                                cursor: product?.stockQuantity[size] > 0  ? "pointer" : "not-allowed",
                                 padding: "1.2rem",
                                 backgroundColor:
                                   selectedSize === size
                                     ? "#DB4444"
-                                    : "whitesmoke",
+                                    : product?.stockQuantity[size]
+                                    ? "whitesmoke"
+                                    :"#f5f5f5",
                                 color: selectedSize === size ? "white" : "",
+                                opacity: product?.stockQuantity[size] > 0 ? 1 : 0.6,  
                               }}
                             >
                               <p>{size}</p>

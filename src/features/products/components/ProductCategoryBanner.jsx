@@ -53,6 +53,11 @@ const CategoryCard = ({ title, buttonText, image }) => {
   );
 };
 
+
+
+
+
+
 const CategoriesSection = () => {
   return (
     <div className="bg-gray-50 py-12 px-6 md:px-12">

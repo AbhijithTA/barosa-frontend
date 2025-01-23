@@ -99,7 +99,7 @@ const CategoryLayout = () => {
   }, [categoryTitle, sort]); // Add `sort` as a dependency
   
   
-  console.log(sort?.order);
+
 
   return (
     <>

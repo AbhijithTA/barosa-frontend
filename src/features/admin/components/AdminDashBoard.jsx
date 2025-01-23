@@ -279,7 +279,7 @@ export const AdminDashBoard = () => {
                   id={product._id}
                   title={product.title}
                   thumbnail={product.thumbnail}
-                  brand={product.brand.name}
+                  // brand={product.brand.name}
                   price={product.price}
                   isAdminCard={true}
                 />

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Stack, TextField, Typography ,Button, Menu, MenuItem, Select, Grid, FormControl, Radio, Paper, IconButton, Box, useTheme, useMediaQuery} from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import React, { useEffect, useState } from 'react'
@@ -12,7 +13,7 @@ import { resetCartByUserIdAsync, selectCartItems } from '../../cart/CartSlice'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { SHIPPING, TAXES } from '../../../constants'
 import {motion} from 'framer-motion';
-import {loadStripe} from '@stripe/stripe-js';
+// import {loadStripe} from '@stripe/stripe-js';
 
 
 export const Checkout = () => {
@@ -190,9 +191,12 @@ export const Checkout = () => {
         <Stack  width={is900?'100%':'auto'} alignItems={is900?'flex-start':''}>
             <Typography variant='h4'>Order summary</Typography>
             <Cart checkout={true}/>
-            <LoadingButton fullWidth loading={orderStatus==='pending'} variant='contained' onClick={makePayment} size='large'>Pay and order</LoadingButton>
+            <LoadingButton fullWidth loading={orderStatus==='pending'} variant='contained'  size='large'>Pay and order</LoadingButton>
         </Stack>
 
     </Stack>
   )
 }
+
+
+// onClick={makePayment}
