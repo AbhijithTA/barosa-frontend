@@ -50,8 +50,8 @@ import {
 import { useTheme } from "@mui/material";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import SwipeableViews from "react-swipeable-views";
-import { autoPlay } from "react-swipeable-views-utils";
+// import SwipeableViews from "react-swipeable-views";
+// import { autoPlay } from "react-swipeable-views-utils";
 import MobileStepper from "@mui/material/MobileStepper";
 import Lottie from "lottie-react";
 import { loadingAnimation } from "../../../assets";
@@ -59,7 +59,7 @@ import SizeChartModal from "../../../constants/SizeChartModal";
 
 const SIZES = ["XS", "S", "M", "L", "XL"];
 const COLORS = ["#020202", "#F6F6F6", "#B82222", "#BEA9A9", "#E2BB8D"];
-const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
+// const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 export const ProductDetails = () => {
   const { id } = useParams();
@@ -295,7 +295,7 @@ export const ProductDetails = () => {
                   <Stack mt={is480 ? "0rem" : "5rem"}>
                     {is1420 ? (
                       <Stack width={is480 ? "100%" : is990 ? "400px" : "500px"}>
-                        <AutoPlaySwipeableViews
+                        {/* <AutoPlaySwipeableViews
                           width={"100%"}
                           height={"100%"}
                           axis={theme.direction === "rtl" ? "x-reverse" : "x"}
@@ -323,7 +323,7 @@ export const ProductDetails = () => {
                               ) : null}
                             </div>
                           ))}
-                        </AutoPlaySwipeableViews>
+                        </AutoPlaySwipeableViews> */}
 
                         <MobileStepper
                           steps={maxSteps}
