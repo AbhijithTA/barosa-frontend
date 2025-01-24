@@ -41,7 +41,6 @@ export const AddProduct = () => {
   const [thumbnail, setThumbnail] = useState("");
   const [isAnyImageUploading, setIsAnyImageUploading] = useState(false);
 
-  console.log(productAddStatus,"productAddStatus");
 
   // Handle product addition status
   useEffect(() => {
@@ -143,6 +142,7 @@ export const AddProduct = () => {
               value={selectedCategoryId}
               onChange={handleCategoryChange}
               error={!!errors.category}
+              label="Category"
             >
               {categories.map((category) => (
                 <MenuItem key={category._id} value={category._id}>
@@ -157,6 +157,7 @@ export const AddProduct = () => {
             <Select
               {...register("subCategory", { required: "Sub Category is required" })}
               disabled={!selectedCategoryId}
+              label="Sub Category"
             >
               {subCategories.map((subCat) => (
                 <MenuItem key={subCat._id} value={subCat._id}>
