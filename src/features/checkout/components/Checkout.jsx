@@ -13,6 +13,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { SHIPPING, TAXES } from '../../../constants'
 import {motion} from 'framer-motion';
 import {loadStripe} from '@stripe/stripe-js';
+import { axiosi } from '../../../config/axios'
 
 
 export const Checkout = () => {
@@ -26,7 +27,7 @@ export const Checkout = () => {
     const loggedInUser=useSelector(selectLoggedInUser)
     const addressStatus=useSelector(selectAddressStatus)
     const navigate=useNavigate()
-    const cartItems=useSelector(selectCartItems)
+    const cartItems=useSelector(selectCartItems) //im using this to get the cart items
     const orderStatus=useSelector(selectOrderStatus)
     const currentOrder=useSelector(selectCurrentOrder)
     const orderTotal=cartItems.reduce((acc,item)=>(item.product.price*item.quantity)+acc,0)
@@ -43,12 +44,14 @@ export const Checkout = () => {
         }
     },[addressStatus])
 
+
     useEffect(()=>{
         if(currentOrder && currentOrder?._id){
             dispatch(resetCartByUserIdAsync(loggedInUser?._id))
             navigate(`/order-success/${currentOrder?._id}`)
         }
     },[currentOrder])
+
     
     const handleAddAddress=(data)=>{
         const address={...data,user:loggedInUser._id}
@@ -56,16 +59,44 @@ export const Checkout = () => {
     }
 
 
-    // const makePayment = async () => {
-    //     const
-    // }
+    const makePayment = async () => {
+        const stripe = await loadStripe("pk_test_51QjOA0GSJadpZs7UjNwfZavVBqN4AH2FDxM5TopwdWTLcUwPxOap3jBhxHiK1RjVpIG5llYMkLGMbODqHOhW7SAV00xMAlfftf");
+
+        const body = {
+            products : cartItems,
+        }
+
+        const headers={
+            "Content-Type": "application/json",
+        }
+
+        const responsse = await fetch("http://localhost:8000/cart/checkout" , {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(body),
+        });
+
+        const session = await responsse.json();
+
+        const result = await stripe.redirectToCheckout({
+            sessionId: session.id,
+        });
+
+      
+
+        if(result.error) {
+            console.log(result.error);
+        }
+
+    }
+
 
     // first payment method which will take you to next page saying succesfull
-    // const handleCreateOrder=()=>{
-    //     const order={user:loggedInUser._id,item:cartItems,address:selectedAddress,paymentMode:selectedPaymentMethod,total:orderTotal+SHIPPING+TAXES}
-    //     console.log(order);
-    //     dispatch(createOrderAsync(order))
-    // }
+    const handleCreateOrder=()=>{
+        const order={user:loggedInUser._id,item:cartItems,address:selectedAddress,paymentMode:selectedPaymentMethod,total:orderTotal+SHIPPING+TAXES}
+        console.log(order);
+        dispatch(createOrderAsync(order))
+    }
 
 
 
@@ -80,6 +111,10 @@ export const Checkout = () => {
                 <motion.div  whileHover={{x:-5}}>
                     <IconButton component={Link} to={"/cart"}><ArrowBackIcon fontSize={is480?"medium":'large'}/></IconButton>
                 </motion.div>
+
+                {/*just declared a button to check cartItems */}
+                <button onClick={()=>console.log(cartItems)}>hi</button>
+
                 <Typography variant='h4'>Shipping Information</Typography>
             </Stack>
 
@@ -190,7 +225,7 @@ export const Checkout = () => {
         <Stack  width={is900?'100%':'auto'} alignItems={is900?'flex-start':''}>
             <Typography variant='h4'>Order summary</Typography>
             <Cart checkout={true}/>
-            <LoadingButton fullWidth loading={orderStatus==='pending'} variant='contained' onClick={makePayment} size='large'>Pay and order</LoadingButton>
+            <LoadingButton fullWidth loading={orderStatus==='pending'} variant='contained' size='large' onClick={makePayment}>Pay and order</LoadingButton>
         </Stack>
 
     </Stack>
