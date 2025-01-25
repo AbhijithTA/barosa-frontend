@@ -5,10 +5,12 @@ import { logoutAsync, selectLoggedInUser } from "../../auth/AuthSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCartItems } from "../../cart/CartSlice";
 import { selectWishlistItems } from "../../wishlist/WishlistSlice";
+import { axiosi } from "../../../config/axios";
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [shopDropdown, setShopDropdown] = useState(false);
+  const [categories, setCategories] = useState([]);
   const [profileDropdown, setProfileDropdown] = useState(false);
   const loggedInUser = useSelector(selectLoggedInUser);
   const cartItems = useSelector(selectCartItems);
@@ -18,6 +20,20 @@ export const Navbar = () => {
 
   const cartItemsCount = cartItems?.length || 0;
   const wishlistItemsCount = wishlistItems?.length || 0;
+
+  //fetching the category and subCategory
+  useEffect(() => {
+    //fetch categories from api
+    const fetchCategories = async () => {
+      try {
+        const response = await axiosi.get("/categories");
+        setCategories(response.data);
+      } catch (Error) {
+        console.error("Error fetching Categories");
+      }
+    };
+    fetchCategories();
+  }, []);
 
   // Handle outside click to close dropdown
   const handleOutsideClick = useCallback((e) => {
@@ -44,11 +60,11 @@ export const Navbar = () => {
     navigate("/login");
   };
 
-  const [expandedCategory, setExpandedCategory] = useState(null); // State to track expanded category
+  const [expandedCategory, setExpandedCategory] = useState(null);
   const [expandedSubCategory, setexpandedSubCategory] = useState(null);
 
   const toggleCategory = (category) => {
-    setExpandedCategory((prev) => (prev === category ? null : category)); // Toggle the category
+    setExpandedCategory((prev) => (prev === category ? null : category));
   };
 
   const toggleSubCategory = (subcategory) => {
@@ -87,57 +103,26 @@ export const Navbar = () => {
             </button>
             {shopDropdown && (
               <div className="absolute left-0 bg-white shadow-lg z-10 w-[96vw] mt-10 flex flex-wrap justify-between py-8">
-                <div className="w-1/4 flex flex-col items-center text-left">
-                  <ul className="text-sm text-black/70 cursor-pointer ">
-                    <h1 className="font-semibold text-lg text-black">Women</h1>
-                    <li className="hover:text-black">Mid Dress</li>
-                    <li className="hover:text-black">Sets</li>
-                    <li className="hover:text-black">Pants</li>
-                    <li className="hover:text-black">Top</li>
-                    <li className="hover:text-black">Sleepwear</li>
-                    <li className="hover:text-black">Shorts</li>
-                    <li className="hover:text-black">Blazers</li>
-                    <li className="hover:text-black">Long Dress</li>
-                  </ul>
-                </div>
-
-                <div className="w-1/4 flex flex-col items-center text-left">
-                  <ul className="text-sm text-black/70 cursor-pointer">
-                    <h1 className="font-semibold text-lg text-left text-black">
-                      Men
+                {categories.map((category) => (
+                  <div className="w-1/4 flex flex-col items-center text-left">
+                    <h1 className="font-semibold text-lg text-black">
+                      {category.name}
                     </h1>
-                    <li className="hover:text-black">Shirts</li>
-                    <li className="hover:text-black">Pants</li>
-                    <li className="hover:text-black">Casual Pants</li>
-                    <li className="hover:text-black">Suits</li>
-                    <li className="hover:text-black">Shorts</li>
-                    <li className="hover:text-black">Sleepwear</li>
-                    <li className="hover:text-black">Blazers</li>
-                    <li className="hover:text-black">Sets</li>
-                  </ul>
-                </div>
-
-                <div className="w-1/4 flex flex-col items-center">
-                  <ul className="text-sm text-black/70 cursor-pointer">
-                    <h1 className="font-semibold text-lg text-left text-black">
-                      Kids
-                    </h1>
-                    <li className="hover:text-black">Shirts</li>
-                    <li className="hover:text-black">Pants</li>
-                    <li className="hover:text-black">Shorts</li>
-                    <li className="hover:text-black">Sleepwear</li>
-                    <li className="hover:text-black">Sets</li>
-                  </ul>
-                </div>
-
-                <div className="w-1/4 flex flex-col items-center">
-                  <ul className="text-sm text-black/70 cursor-pointer">
-                    <h1 className="font-semibold text-lg text-left text-black">
-                      Gifts
-                    </h1>
-                    <li className="hover:text-black">Gifts</li>
-                  </ul>
-                </div>
+                    <ul className="text-sm text-black/70 cursor-pointer ">
+                      {category.subCategory.map((sub) => (
+                        <li
+                          key={sub._id}
+                          className="hover:text-black"
+                          onClick={() =>
+                            navigate(`/categories/${category.name}/${sub.name}`)
+                          }
+                        >
+                          {sub.name}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             )}
           </div>
