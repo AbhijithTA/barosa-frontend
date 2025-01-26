@@ -15,6 +15,7 @@ import Lottie from "lottie-react";
 import { loadingAnimation } from "../../../assets";
 import { ProductCard } from "../components/ProductCard";
 import { useTheme } from "@emotion/react";
+import { useNavigate } from "react-router-dom";
 
 const CategoryLayout = () => {
   const { categoryTitle } = useParams(); // Get category title from URL
@@ -24,6 +25,8 @@ const CategoryLayout = () => {
   const [categories, setCategories] = useState([]); // Categories data
   const [subCategories, setSubCategories] = useState([]); // Subcategories for current category
   const [sort, setSort] = useState(null); // Sort state
+
+  const navigate = useNavigate();
 
   const sortOptions = [
     { name: "Price: low to high", sort: "price", order: "asc" },
@@ -99,7 +102,10 @@ const CategoryLayout = () => {
   }, [categoryTitle, sort]); // Add `sort` as a dependency
   
   
-
+  const handleSubCategoryClick = (subcategoryTitle) => {
+    // Navigate to the dynamic subcategory route
+    navigate(`/categories/${categoryTitle}/${subcategoryTitle}`);
+  };
 
   return (
     <>
@@ -115,6 +121,7 @@ const CategoryLayout = () => {
                 <li
                   key={subCategory._id}
                   className="text-gray-700 border-b-[1px] py-1 text-sm sm:text-md"
+                  onClick={() => handleSubCategoryClick(subCategory.name)}
                 >
                   {subCategory.name}
                 </li>

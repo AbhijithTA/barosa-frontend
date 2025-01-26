@@ -79,7 +79,7 @@ export const AdminOrders = () => {
     }
   }
 
-
+console.log(orders,"orders");
   return (
 
     <Stack justifyContent={'center'} alignItems={'center'}>
@@ -94,6 +94,7 @@ export const AdminOrders = () => {
                 <TableRow>
                   <TableCell>Order</TableCell>
                   <TableCell align="left">Id</TableCell>
+                  <TableCell align="left">Customer Contact</TableCell>
                   <TableCell align="left">Item</TableCell>
                   <TableCell align="right">Total Amount</TableCell>
                   <TableCell align="right">Shipping Address</TableCell>
@@ -113,6 +114,7 @@ export const AdminOrders = () => {
 
                     <TableCell component="th" scope="row">{index}</TableCell>
                     <TableCell align="right">{order._id}</TableCell>
+                    <TableCell align="right">{order.address[0].phoneNumber}</TableCell>
                     <TableCell align="right">
                       {
                         order.item.map((product)=>(

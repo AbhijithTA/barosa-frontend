@@ -17,11 +17,15 @@ import { ProductCard } from "../components/ProductCard";
 import { useTheme } from "@emotion/react";
 import { useProducts } from "../../../hooks/useProducts";
 import { axiosi } from "../../../config/axios";
+import { useNavigate } from "react-router-dom";
 
 const SubcategoryLayout = () => {
   const { categoryTitle, subCategoryTitle } = useParams();
   const [subCategories, setSubCategories] = useState([]);
   const [sort, setSort] = useState(null);
+
+  const navigate = useNavigate();
+
 
   const { products, fetchStatus, totalCount } = useProducts({
     category: categoryTitle,
@@ -52,6 +56,11 @@ const SubcategoryLayout = () => {
     if (categoryTitle) fetchSubCategories();
   }, [categoryTitle]);
 
+
+  const handleSubCategoryClick = (subcategoryTitle) => {
+    // Navigate to the dynamic subcategory route
+    navigate(`/categories/${categoryTitle}/${subcategoryTitle}`);
+  };
   return (
     <>
       <Navbar />
@@ -67,6 +76,7 @@ const SubcategoryLayout = () => {
                   className={`text-gray-700 border-b-[1px] py-1 text-sm sm:text-md ${
                     subCategory.name === subCategoryTitle ? "font-bold" : ""
                   }`}
+                  onClick={() => handleSubCategoryClick(subCategory.name)}
                 >
                   {subCategory.name}
                 </li>
