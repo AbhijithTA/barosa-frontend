@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate , useParams } from "react-router-dom";
 import {
   clearSelectedProduct,
   fetchProductByIdAsync,
@@ -62,7 +62,11 @@ const COLORS = ["#020202", "#F6F6F6", "#B82222", "#BEA9A9", "#E2BB8D"];
 // const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 export const ProductDetails = () => {
+
+  const navigate = useNavigate();
+
   const { id } = useParams();
+ 
   const product = useSelector(selectSelectedProduct);
   const loggedInUser = useSelector(selectLoggedInUser);
   const dispatch = useDispatch();
@@ -167,10 +171,14 @@ export const ProductDetails = () => {
       dispatch(resetWishlistItemAddStatus());
       dispatch(resetCartItemAddStatus());
     };
-  }, []);
+  }, [dispatch]);
 
   const handleAddToCart = () => {
-    const item = { user: loggedInUser._id, product: id, quantity };
+    if(!loggedInUser){
+      navigate("/login");
+      return;
+    }
+    const item = { user: loggedInUser._id, product: id, quantity, size: selectedSize };
     dispatch(addToCartAsync(item));
     setQuantity(1);
   };
@@ -216,8 +224,7 @@ export const ProductDetails = () => {
     setActiveStep(step);
   };
 
-
-  console.log("product", product);
+  
   return (
     <>
       {!(
@@ -495,9 +502,20 @@ export const ProductDetails = () => {
                         >
                           {SIZES.map((size) => (
                             <motion.div
-                              onClick={() => product?.stockQuantity[size] > 0 && handleSizeSelect(size)}
-                              whileHover={product?.stockQuantity[size] > 0  ? { scale: 1.05 } : {}}
-                              whileTap={product?.stockQuantity[size] > 0  ? { scale: 1 } : {}}
+                              onClick={() =>
+                                product?.stockQuantity[size] > 0 &&
+                                handleSizeSelect(size)
+                              }
+                              whileHover={
+                                product?.stockQuantity[size] > 0
+                                  ? { scale: 1.05 }
+                                  : {}
+                              }
+                              whileTap={
+                                product?.stockQuantity[size] > 0
+                                  ? { scale: 1 }
+                                  : {}
+                              }
                               style={{
                                 border:
                                   selectedSize === size
@@ -509,16 +527,20 @@ export const ProductDetails = () => {
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
-                                cursor: product?.stockQuantity[size] > 0  ? "pointer" : "not-allowed",
+                                cursor:
+                                  product?.stockQuantity[size] > 0
+                                    ? "pointer"
+                                    : "not-allowed",
                                 padding: "1.2rem",
                                 backgroundColor:
                                   selectedSize === size
                                     ? "#DB4444"
                                     : product?.stockQuantity[size]
                                     ? "whitesmoke"
-                                    :"#f5f5f5",
+                                    : "#f5f5f5",
                                 color: selectedSize === size ? "white" : "",
-                                opacity: product?.stockQuantity[size] > 0 ? 1 : 0.6,  
+                                opacity:
+                                  product?.stockQuantity[size] > 0 ? 1 : 0.6,
                               }}
                             >
                               <p>{size}</p>
@@ -619,8 +641,18 @@ export const ProductDetails = () => {
                               border: "none",
                               borderRadius: "8px",
                             }}
+                            disabled={
+                              selectedSize &&
+                              (!product?.stockQuantity[selectedSize] ||
+                                product?.stockQuantity[selectedSize] <= 0)
+                            }
                           >
-                            Add To Cart
+                            {selectedSize
+                              ? product?.stockQuantity[selectedSize] &&
+                                product?.stockQuantity[selectedSize] > 0
+                                ? "Add to Cart"
+                                : "Out of Stock"
+                              : "Select Size"}
                           </motion.button>
                         )}
 
