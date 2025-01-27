@@ -72,24 +72,24 @@ export const Cart = ({checkout}) => {
 
                             <Stack flexDirection={'row'} justifyContent={'space-between'}>
                                 <Typography>Subtotal</Typography>
-                                <Typography>${subtotal}</Typography>
+                                <Typography>AED {subtotal}</Typography>
                             </Stack>
 
                             <Stack flexDirection={'row'} justifyContent={'space-between'}>
                                 <Typography>Shipping</Typography>
-                                <Typography>${SHIPPING}</Typography>
+                                <Typography>AED {SHIPPING}</Typography>
                             </Stack>
 
                             <Stack flexDirection={'row'} justifyContent={'space-between'}>
                                 <Typography>Taxes</Typography>
-                                <Typography>${TAXES}</Typography> 
+                                <Typography>AED {TAXES}</Typography> 
                             </Stack>
 
                             <hr/>
 
                             <Stack flexDirection={'row'} justifyContent={'space-between'}>
                                 <Typography>Total</Typography>
-                                <Typography>${subtotal+SHIPPING+TAXES}</Typography>
+                                <Typography>AED {subtotal+SHIPPING+TAXES}</Typography>
                             </Stack>
                             
 
@@ -103,7 +103,7 @@ export const Cart = ({checkout}) => {
                             </Stack>
 
                             <Stack>
-                                <Typography variant='h6' fontWeight={500}>${subtotal}</Typography>
+                                <Typography variant='h6' fontWeight={500}>AED {subtotal}</Typography>
                             </Stack>
                         </>
                     )

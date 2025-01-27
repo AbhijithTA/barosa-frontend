@@ -13,7 +13,8 @@ import { resetCartByUserIdAsync, selectCartItems } from '../../cart/CartSlice'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { SHIPPING, TAXES } from '../../../constants'
 import {motion} from 'framer-motion';
-// import {loadStripe} from '@stripe/stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+import { axiosi } from '../../../config/axios'
 
 
 export const Checkout = () => {
@@ -42,14 +43,14 @@ export const Checkout = () => {
         else if(addressStatus==='rejected'){
             alert('Error adding your address')
         }
-    },[addressStatus])
+    },[addressStatus,reset])
 
     useEffect(()=>{
         if(currentOrder && currentOrder?._id){
             dispatch(resetCartByUserIdAsync(loggedInUser?._id))
             navigate(`/order-success/${currentOrder?._id}`)
         }
-    },[currentOrder])
+    },[currentOrder,dispatch,navigate])
     
     const handleAddAddress=(data)=>{
         const address={...data,user:loggedInUser._id}
@@ -67,6 +68,54 @@ export const Checkout = () => {
     //     console.log(order);
     //     dispatch(createOrderAsync(order))
     // }
+
+    const cardPayment = async (order) =>{
+        const stripe = await loadStripe("pk_test_51QjOA0GSJadpZs7UjNwfZavVBqN4AH2FDxM5TopwdWTLcUwPxOap3jBhxHiK1RjVpIG5llYMkLGMbODqHOhW7SAV00xMAlfftf");
+
+        const body = {
+            products: Cart,
+
+        }
+
+       try{
+        const response = await axiosi.post('/checkout/create-checkout-session',body,{
+            headers:{
+                'Content-Type':'application/json'
+            }
+        });
+
+        // handle response if the payment is successfull
+        if(response.status === 200){
+            console.log("Payment initiated successfully",response.data);
+
+            //calling stripe api or handle completion based on response
+        }else{
+            console.error('Error inititated payment',response.data);
+        }
+       }catch(err){
+            console.error('Error with the card payment',err); 
+       }
+    }
+
+    const handleCreateOrder = ()=>{
+        const order = {
+            user: loggedInUser._id,
+            items: cartItems,
+            address: selectedAddress,
+            paymentMode: selectedPaymentMethod,
+            total: orderTotal + SHIPPING + TAXES
+
+        };
+        if(selectedPaymentMethod === 'COD'){
+            //creating order directly
+            dispatch(createOrderAsync(order));
+        } else if(selectedPaymentMethod === 'CARD'){
+              cardPayment(order)
+            // makePayment();
+        }
+    }
+
+
 
 
 
@@ -191,7 +240,7 @@ export const Checkout = () => {
         <Stack  width={is900?'100%':'auto'} alignItems={is900?'flex-start':''}>
             <Typography variant='h4'>Order summary</Typography>
             <Cart checkout={true}/>
-            <LoadingButton fullWidth loading={orderStatus==='pending'} variant='contained'  size='large'>Pay and order</LoadingButton>
+            <LoadingButton fullWidth loading={orderStatus==='pending'} variant='contained'  size='large' onClick={handleCreateOrder}>Pay and order</LoadingButton>
         </Stack>
 
     </Stack>

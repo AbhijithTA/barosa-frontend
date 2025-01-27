@@ -59,7 +59,7 @@ export const CartItem = ({id,thumbnail,title,size,price,quantity,stockQuantity,p
 
         {/* price and remove button */}
         <Stack justifyContent={'space-evenly'} alignSelf={is552?'flex-end':''} height={'100%'} rowGap={'1rem'} alignItems={'flex-end'}>
-            <Typography variant='body2'>${price}</Typography>
+            <Typography variant='body2'>AED {price}</Typography>
             <Button size={is480?"small":""} onClick={handleProductRemove} variant='contained'>Remove</Button>
         </Stack>
     </Stack>
