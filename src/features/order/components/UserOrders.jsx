@@ -27,6 +27,8 @@ export const UserOrders = () => {
     const is480=useMediaQuery(theme.breakpoints.down("480"))
 
     const cartItemAddStatus=useSelector(selectCartItemAddStatus)
+
+    console.log(orders,"this is the orders");
     
     useEffect(()=>{
         window.scrollTo({
@@ -125,7 +127,7 @@ export const UserOrders = () => {
                                         </Stack>
 
                                         <Stack>
-                                            <Typography>Item: {order.item.length}</Typography>
+                                            <Typography>Item: {order?.item?.length}</Typography>
                                         </Stack>
                                     </Stack>
 
