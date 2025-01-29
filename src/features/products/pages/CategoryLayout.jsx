@@ -58,19 +58,6 @@ const CategoryLayout = () => {
     setSubCategories(currentCategory?.subCategory || []); // Update subcategories
   }, [categoryTitle, categories]);
 
-  
-
-  // Sort useeffect
-
-  //  useEffect(()=>{
-  //         const finalFilters={...filters}
-  
-  //         finalFilters['pagination']={page:page,limit:ITEMS_PER_PAGE}
-  //         finalFilters['sort']=sort
-  
-        
-          
-  //     },[filters,sort,page])
 
   // Fetch products
   useEffect(() => {

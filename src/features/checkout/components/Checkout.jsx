@@ -68,7 +68,7 @@ export const Checkout = () => {
   const is480 = useMediaQuery(theme.breakpoints.down(480));
 
 
-  console.log(cartItems,"this is the cart items");
+  
 
   useEffect(() => {
     if (currentOrder && currentOrder?._id) {
@@ -95,7 +95,7 @@ export const Checkout = () => {
 
 
   const cardPayment = async (order) => {
-    console.log(order,"this is the order")
+    
     const stripe = await loadStripe(
       "pk_test_51QjOA0GSJadpZs7UjNwfZavVBqN4AH2FDxM5TopwdWTLcUwPxOap3jBhxHiK1RjVpIG5llYMkLGMbODqHOhW7SAV00xMAlfftf"
     );
@@ -143,7 +143,7 @@ export const Checkout = () => {
     }
   }, [addressStatus, reset]);
 
-  const handleCreateOrder = () => {
+  const handleCreateOrder = async () => {
     const order = {
       user: loggedInUser._id,
       items: cartItems.map((item) => ({
@@ -156,10 +156,18 @@ export const Checkout = () => {
       total: orderTotal + SHIPPING + TAXES,
     };
     if (selectedPaymentMethod === "COD") {
+
+      //dispatching the action to create and get order id
+      const createdOrder = await dispatch(createOrderAsync(order)).unwrap();
+
+      if(createdOrder?._id){
+        navigate(`/order-success/${createdOrder._id}`);
+      }
+
+
       //creating order directly
-      dispatch(createOrderAsync(order));
+      // dispatch(createOrderAsync(order));
     } else if (selectedPaymentMethod === "CARD") {
-      console.log(order,"this is the order items")
        dispatch(createOrderAsync(order));
     }
   };

@@ -21,6 +21,8 @@ export const useProducts = ({ category, subCategory, sort, page, limit }) => {
           limit,
         };
 
+        console.log("Fetching products with params:", params); // Debugging log
+
         //fetch products
         const response = await axiosi.get("/products", { params });
 

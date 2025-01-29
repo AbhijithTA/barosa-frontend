@@ -1,115 +1,99 @@
-import { Box, Button, Paper, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { resetCurrentOrder, selectCurrentOrder } from '../features/order/OrderSlice';
-import { selectUserInfo } from '../features/user/UserSlice';
-import { orderSuccessAnimation } from '../assets';
-import Lottie from 'lottie-react';
-import { axiosi } from '../config/axios';
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { resetCurrentOrder, selectCurrentOrder } from "../features/order/OrderSlice";
+import { selectUserInfo } from "../features/user/UserSlice";
+import { axiosi } from "../config/axios";
+import { Button, Stack, Typography, Paper, Box } from "@mui/material";
+import Lottie from "lottie-react";
+import { orderSuccessAnimation } from "../assets";
 
 export const OrderSuccessPage = () => {
-  const { id: sessionId } = useParams(); // Extract sessionId from the URL
-  const navigate = useNavigate();
+  const { id } = useParams(); // `id` can be sessionId (CARD) or orderId (COD)
   const dispatch = useDispatch();
-  const currentOrder = useSelector(selectCurrentOrder); // Get currentOrder from Redux
-  const userDetails = useSelector(selectUserInfo); // Get user details from Redux
-  const theme = useTheme();
-  const is480 = useMediaQuery(theme.breakpoints.down(480));
+  const navigate = useNavigate();
+  
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [order, setOrder] = useState(null); // Local state to store fetched order
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const userDetails = useSelector(selectUserInfo);
+  const currentOrder = useSelector(selectCurrentOrder); 
 
-  // Fetch order details using sessionId
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await axiosi.get(`/checkout/get-order?session_id=${sessionId}`);
-        setOrder(response.data.order); // Set the fetched order in local state
+        let response;
+        
+        if (id && id.startsWith("cs_")) {
+          // ✅ Fetch order for CARD payments using sessionId
+          response = await axiosi.get(`/checkout/get-order?session_id=${id}`);
+        } else if (id) {
+          // ✅ Fetch order for COD using orderId
+          response = await axiosi.get(`/orders/${id}`);
+        } else if (userDetails?._id) {
+          // ✅ Fetch the latest order for the user
+          response = await axiosi.get(`/orders/user/${userDetails._id}`);
+          if (response.data.length > 0) {
+            response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort orders by latest
+            response = { data: { order: response.data[0] } }; // Pick the most recent order
+          } else {
+            throw new Error("No orders found.");
+          }
+        }
+
+        setOrder(response.data.order);
       } catch (err) {
-        console.error('Error fetching order details:', err);
-        setError('Failed to fetch order details. Please try again later.');
+        console.error("Error fetching order details:", err);
+        setError("Failed to fetch order details. Please try again later.");
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     };
 
-    if (sessionId) {
-      fetchOrder();
-    }
-  }, [sessionId]);
+    fetchOrder();
+  }, [id, userDetails]);
 
-  // Redirect if currentOrder is missing
-  useEffect(() => {
-    if (!currentOrder) {
-      navigate('/');
-    }
-  }, [currentOrder, navigate]);
-
-  // Reset currentOrder when the component unmounts
   useEffect(() => {
     return () => {
       dispatch(resetCurrentOrder());
     };
   }, [dispatch]);
 
-  // Show loading state
   if (loading) {
     return (
-      <Stack width={'100vw'} height={'100vh'} justifyContent={'center'} alignItems={'center'}>
+      <Stack width="100vw" height="100vh" justifyContent="center" alignItems="center">
         <Typography variant="h6">Loading order details...</Typography>
       </Stack>
     );
   }
 
-  // Show error state
   if (error) {
     return (
-      <Stack width={'100vw'} height={'100vh'} justifyContent={'center'} alignItems={'center'}>
-        <Typography variant="h6" color="error">
-          {error}
-        </Typography>
-        <Button component={Link} to="/" variant="contained">
-          Go to Home
-        </Button>
+      <Stack width="100vw" height="100vh" justifyContent="center" alignItems="center">
+        <Typography variant="h6" color="error">{error}</Typography>
+        <Button component={Link} to="/" variant="contained">Go to Home</Button>
       </Stack>
     );
   }
 
   return (
-    <Stack width={'100vw'} height={'100vh'} justifyContent={'center'} alignItems={'center'}>
-      <Stack
-        component={Paper}
-        boxShadow={is480 ? 'none' : ''}
-        rowGap={3}
-        elevation={1}
-        p={is480 ? 1 : 4}
-        justifyContent={'center'}
-        alignItems={'center'}
-      >
-        <Box width={'10rem'} height={'7rem'}>
+    <Stack width="100vw" height="100vh" justifyContent="center" alignItems="center">
+      <Stack component={Paper} rowGap={3} elevation={1} p={4} justifyContent="center" alignItems="center">
+        <Box width="10rem" height="7rem">
           <Lottie animationData={orderSuccessAnimation} />
         </Box>
 
-        <Stack mt={2} textAlign={'center'} justifyContent={'center'} alignItems={'center'} rowGap={1}>
-          <Typography variant="h6" fontWeight={400}>
-            Hey {userDetails?.name}
-          </Typography>
+        <Stack textAlign="center" justifyContent="center" alignItems="center" rowGap={1}>
+          <Typography variant="h6">Hey {userDetails?.name}</Typography>
           <Typography variant="h5">Your Order #{order?._id || currentOrder?._id} is confirmed</Typography>
           <Typography variant="body2" color="text.secondary">
             Thank you for shopping with us ❤️
           </Typography>
         </Stack>
 
-        <Button
-          component={Link}
-          to={'/orders'}
-          onClick={() => dispatch(resetCurrentOrder())}
-          size={is480 ? 'small' : ''}
-          variant="contained"
-        >
-          Check order status in my orders
+        <Button component={Link} to="/orders" onClick={() => dispatch(resetCurrentOrder())} variant="contained">
+          Check order status
         </Button>
       </Stack>
     </Stack>

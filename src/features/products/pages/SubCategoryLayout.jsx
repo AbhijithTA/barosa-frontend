@@ -154,7 +154,7 @@ const SubcategoryLayout = () => {
                     id={product._id}
                     title={product.title}
                     thumbnail={product.thumbnail}
-                    brand={product.brand?.name || "Unknown"}
+                   
                     price={product.price}
                   />
                 ))
