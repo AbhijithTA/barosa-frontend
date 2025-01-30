@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Navbar } from "../../navigation/components/Navbar";
-
 import {
   Stack,
   Grid,
@@ -26,10 +25,12 @@ const SubcategoryLayout = () => {
 
   const navigate = useNavigate();
 
+  console.log("categoryTitle:", categoryTitle); // Debugging
+  console.log("subCategoryTitle:", subCategoryTitle); // Debugging
 
   const { products, fetchStatus, totalCount } = useProducts({
     category: categoryTitle,
-    subCategory: subCategoryTitle,
+    subCategory: subCategoryTitle, // Pass subCategoryTitle to the hook
     sort,
     page: 1,
     limit: 10,
@@ -43,7 +44,7 @@ const SubcategoryLayout = () => {
   const theme = useTheme();
   const is700 = useMediaQuery(theme.breakpoints.down(700));
 
-  //fetch the subCategories based on the categoryTitle
+  // Fetch subcategories based on the categoryTitle
   useEffect(() => {
     const fetchSubCategories = async () => {
       try {
@@ -56,16 +57,16 @@ const SubcategoryLayout = () => {
     if (categoryTitle) fetchSubCategories();
   }, [categoryTitle]);
 
-
   const handleSubCategoryClick = (subcategoryTitle) => {
     // Navigate to the dynamic subcategory route
     navigate(`/categories/${categoryTitle}/${subcategoryTitle}`);
   };
+
   return (
     <>
       <Navbar />
       <div className="flex h-screen pt-[65px]">
-        {/* left side bar */}
+        {/* Left Sidebar */}
         <div className="w-[20vw] p-1 sm:p-4 border-r border-gray-200">
           <h2 className="text-lg font-bold mb-4">{categoryTitle}</h2>
           {subCategories.length > 0 ? (
@@ -83,12 +84,11 @@ const SubcategoryLayout = () => {
               ))}
             </ul>
           ) : (
-            <p className="text-gray-500">NO Subcategories available</p>
+            <p className="text-gray-500">No subcategories available</p>
           )}
         </div>
 
-        {/* right content (proudct list) */}
-
+        {/* Right Content (Product List) */}
         <div className="flex-1 p-6">
           <Stack
             flexDirection={"row"}
@@ -154,7 +154,6 @@ const SubcategoryLayout = () => {
                     id={product._id}
                     title={product.title}
                     thumbnail={product.thumbnail}
-                   
                     price={product.price}
                   />
                 ))

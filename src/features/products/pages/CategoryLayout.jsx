@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { axiosi } from "../../../config/axios";
 import { Navbar } from "../../navigation/components/Navbar";
@@ -16,6 +17,10 @@ import { loadingAnimation } from "../../../assets";
 import { ProductCard } from "../components/ProductCard";
 import { useTheme } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
+import { Footer } from "../../footer/Footer";
+import React from "react";
+import { createWishlistItemAsync, deleteWishlistItemByIdAsync, selectWishlistItems } from "../../wishlist/WishlistSlice";
+import { selectLoggedInUser } from "../../auth/AuthSlice";
 
 const CategoryLayout = () => {
   const { categoryTitle } = useParams(); // Get category title from URL
@@ -27,6 +32,10 @@ const CategoryLayout = () => {
   const [sort, setSort] = useState(null); // Sort state
 
   const navigate = useNavigate();
+  const wishlistItems = useSelector(selectWishlistItems);
+  const loggedInUser = useSelector(selectLoggedInUser);
+
+  const dispatch = useDispatch();
 
   const sortOptions = [
     { name: "Price: low to high", sort: "price", order: "asc" },
@@ -58,24 +67,23 @@ const CategoryLayout = () => {
     setSubCategories(currentCategory?.subCategory || []); // Update subcategories
   }, [categoryTitle, categories]);
 
-
   // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setFetchStatus("pending"); // Set status to pending
-  
+
         // Ensure sort parameters are extracted correctly
         const params = sort
           ? { sort: sort.sort, order: sort.order }
           : undefined;
-  
+
         // Fetch products with sort and order parameters
         const productResponse = await axiosi.get(
           `/products/latest-products/${categoryTitle}`,
           { params }
         );
-  
+
         // Update products state
         setProducts(productResponse.data);
         setFetchStatus("fulfilled"); // Set status to fulfilled
@@ -84,14 +92,33 @@ const CategoryLayout = () => {
         setFetchStatus("error"); // Set status to error
       }
     };
-  
+
     fetchProducts();
   }, [categoryTitle, sort]); // Add `sort` as a dependency
-  
-  
+
   const handleSubCategoryClick = (subcategoryTitle) => {
-    // Navigate to the dynamic subcategory route
-    navigate(`/categories/${categoryTitle}/${subcategoryTitle}`);
+  
+      // Navigate to the dynamic subcategory route
+      navigate(`/categories/${categoryTitle}/${subcategoryTitle}`);
+    
+  };
+
+    const handleAddRemoveFromWishlist = (e, productId) => {
+    if (e.target.checked) {
+      if (!loggedInUser) {
+        navigate("/login");
+      } else {
+        const data = { user: loggedInUser._id, product: productId };
+        dispatch(createWishlistItemAsync(data));
+      }
+    } else {
+      const index = wishlistItems.findIndex(
+        (item) => item.product._id === productId
+      );
+      if (index !== -1) {
+        dispatch(deleteWishlistItemByIdAsync(wishlistItems[index]._id));
+      }
+    }
   };
 
   return (
@@ -99,37 +126,39 @@ const CategoryLayout = () => {
       <Navbar />
       <div className="flex h-screen pt-[65px]">
         {/* Left Sidebar (Filters & Subcategories) */}
-        <div className="w-[20vw] p-1 sm:p-4 border-r border-gray-200">
-          <h2 className="font-bold text-lg mb-4">{categoryTitle}</h2>
+        <div className="w-[20vw] min-w-[250px] p-4 bg-white border-r border-gray-200 shadow-sm">
+          <h2 className="font-bold text-xl mb-6 text-gray-800">
+            {categoryTitle}
+          </h2>
 
           {subCategories.length > 0 ? (
-            <ul>
+            <ul className="space-y-2">
               {subCategories.map((subCategory) => (
                 <li
                   key={subCategory._id}
-                  className="text-gray-700 border-b-[1px] py-1 text-sm sm:text-md"
+                  className="text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200 cursor-pointer"
                   onClick={() => handleSubCategoryClick(subCategory.name)}
                 >
-                  {subCategory.name}
+                  <div className="px-4 py-2 text-sm sm:text-md">
+                    {subCategory.name}
+                  </div>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-gray-500">No subcategories available.</p>
+            <p className="text-gray-500 text-sm">No subcategories available.</p>
           )}
         </div>
 
         {/* Right Content (Product List) */}
-        <div className="flex-1 p-6">
+        <div className="flex-1 p-6 bg-gray-50">
           <Stack
             flexDirection={"row"}
             justifyContent={"flex-end"}
             alignItems={"center"}
             columnGap={5}
           >
-
-              {/* Sort option */}
-             
+            {/* Sort option */}
             <Stack alignSelf={"flex-end"} width={"12rem"}>
               <FormControl fullWidth>
                 <InputLabel id="sort-dropdown">Sort</InputLabel>
@@ -184,8 +213,9 @@ const CategoryLayout = () => {
                     id={product._id}
                     title={product.title}
                     thumbnail={product.thumbnail}
-                    brand={product.brand?.name || "Unknown"}
+                    // brand={product.brand?.name || "Unknown"}
                     price={product.price}
+                    handleAddRemoveFromWishlist={handleAddRemoveFromWishlist}
                   />
                 ))
               ) : (
@@ -197,6 +227,7 @@ const CategoryLayout = () => {
           )}
         </div>
       </div>
+      
     </>
   );
 };

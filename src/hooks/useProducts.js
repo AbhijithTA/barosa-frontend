@@ -11,32 +11,32 @@ export const useProducts = ({ category, subCategory, sort, page, limit }) => {
       try {
         setFetchStatus("pending");
 
-        //build query params
+        // Ensure category and subCategory are correctly formatted
         const params = {
-          category,
-          subCategory,
-          sort: sort?.sort,
-          order: sort?.order,
-          page,
-          limit,
+          ...(category ? { category } : {}), // Only include category if it exists
+          ...(subCategory ? { subCategory } : {}), // Only include subCategory if it exists
+          ...(sort?.sort ? { sort: sort.sort } : {}),
+          ...(sort?.order ? { order: sort.order } : {}),
+          page: page || 1, // Default to page 1
+          limit: limit || 10, // Default limit if not specified
         };
 
-        console.log("Fetching products with params:", params); // Debugging log
+        console.log("Fetching products with params:", params); 
 
-        //fetch products
+        // Fetch products with query parameters
         const response = await axiosi.get("/products", { params });
 
         setProducts(response.data);
-        setTotalCount(response.headers["x-total-count"]);
+        setTotalCount(Number(response.headers["x-total-count"]) || 0);
         setFetchStatus("fulfilled");
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching products:", error);
         setFetchStatus("error");
       }
     };
 
     fetchProducts();
-  }, [category, subCategory, sort, page, limit]);
+  }, [category, subCategory, sort, page, limit]); // Dependencies ensure re-fetch
 
   return { products, fetchStatus, totalCount };
 };

@@ -21,24 +21,22 @@ export const Navbar = () => {
   const cartItemsCount = cartItems?.length || 0;
   const wishlistItemsCount = wishlistItems?.length || 0;
 
-  //fetching the category and subCategory
   useEffect(() => {
-    //fetch categories from api
     const fetchCategories = async () => {
       try {
         const response = await axiosi.get("/categories");
         setCategories(response.data);
-      } catch (Error) {
-        console.error("Error fetching Categories");
+      } catch (error) {
+        console.error("Error fetching Categories", error);
       }
     };
     fetchCategories();
   }, []);
 
-  // Handle outside click to close dropdown
   const handleOutsideClick = useCallback((e) => {
     if (!e.target.closest(".dropdown-container")) {
       setShopDropdown(false);
+      setProfileDropdown(false);
     }
   }, []);
 
@@ -61,26 +59,24 @@ export const Navbar = () => {
   };
 
   const [expandedCategory, setExpandedCategory] = useState(null);
-  const [expandedSubCategory, setexpandedSubCategory] = useState(null);
+  const [expandedSubCategory, setExpandedSubCategory] = useState(null);
 
   const toggleCategory = (category) => {
     setExpandedCategory((prev) => (prev === category ? null : category));
   };
 
   const toggleSubCategory = (subcategory) => {
-    setexpandedSubCategory((prev) =>
-      prev === subcategory ? null : subcategory
-    );
+    setExpandedSubCategory((prev) => (prev === subcategory ? null : subcategory));
   };
 
   return (
-    <div className="fixed top-0 w-full h-[65px] bg-white text-black shadow-md z-[1000]">
-      <div className="flex items-center justify-between px-4 md:px-8 h-full">
+    <div className="fixed top-0 w-full h-16 bg-white text-black shadow-md z-50">
+      <div className="container mx-auto flex items-center justify-between px-4 md:px-8 h-full">
         {/* Desktop Links */}
-        <div className="hidden md:flex gap-10 sm:gap-5 w-2/6">
-          <div className="relative flex dropdown-container">
+        <div className="hidden md:flex gap-8 items-center">
+          <div className="relative dropdown-container">
             <button
-              className="hover:text-black/50 flex items-center"
+              className="flex items-center text-sm font-medium hover:text-gray-600"
               onClick={() => setShopDropdown(!shopDropdown)}
             >
               SHOP
@@ -102,17 +98,17 @@ export const Navbar = () => {
               </svg>
             </button>
             {shopDropdown && (
-              <div className="absolute left-0 bg-white shadow-lg z-10 w-[96vw] mt-10 flex flex-wrap justify-between py-8">
+              <div className="absolute left-0 bg-white shadow-lg z-10 w-[96vw] mt-4 flex flex-wrap justify-between py-8 px-8">
                 {categories.map((category) => (
-                  <div className="w-1/4 flex flex-col items-center text-left">
-                    <h1 className="font-semibold text-lg text-black">
+                  <div key={category._id} className="w-1/4 flex flex-col items-start">
+                    <h1 className="font-semibold text-lg text-black mb-2">
                       {category.name}
                     </h1>
-                    <ul className="text-sm text-black/70 cursor-pointer ">
+                    <ul className="text-sm text-gray-700">
                       {category.subCategory.map((sub) => (
                         <li
                           key={sub._id}
-                          className="hover:text-black"
+                          className="hover:text-black mb-1"
                           onClick={() =>
                             navigate(`/categories/${category.name}/${sub.name}`)
                           }
@@ -127,24 +123,24 @@ export const Navbar = () => {
             )}
           </div>
 
-          <Link to="/" className="text-black text-sm">
+          <Link to="/" className="text-sm font-medium hover:text-gray-600">
             ABOUT
           </Link>
-          <Link to="/" className="text-black text-sm">
+          <Link to="/" className="text-sm font-medium hover:text-gray-600">
             CONTACT
           </Link>
-          <Link to="/" className="text-black text-sm">
+          <Link to="/" className="text-sm font-medium hover:text-gray-600">
             MORE
           </Link>
         </div>
 
-        <div className="w-2/6 flex justify-center">
+        <div className="flex justify-center">
           <Link to="/">
-            <h2 className="text-xl sm:text-3xl font-semibold">BAROZA</h2>
+            <h2 className="text-2xl font-bold text-black">BAROZA</h2>
           </Link>
         </div>
 
-        <div className="flex items-center justify-end gap-5 w-2/6">
+        <div className="flex items-center gap-6">
           {loggedInUser ? (
             <>
               {!loggedInUser.isAdmin && (
@@ -178,20 +174,21 @@ export const Navbar = () => {
             <>
               <Profile
                 onClick={() => navigate("/login")}
-                className="w-5 h-5 cursor-pointer"
+                className="w-5 h-5 cursor-pointer hover:text-gray-600"
               />
               <Love
                 onClick={() => navigate("/login")}
-                className="w-6 h-6 cursor-pointer"
+                className="w-6 h-6 cursor-pointer hover:text-gray-600"
               />
               <Cart
                 onClick={() => navigate("/login")}
-                className="w-6 h-6 cursor-pointer"
+                className="w-6 h-6 cursor-pointer hover:text-gray-600"
               />
             </>
           )}
         </div>
 
+        {/* Mobile Menu */}
         <div className="md:hidden">
           <button
             className="p-2"
@@ -217,23 +214,23 @@ export const Navbar = () => {
             </svg>
           </button>
           {mobileMenuOpen && (
-            <div className="absolute top-[65px] right-0 w-1/2 h-screen bg-white shadow-lg z-[1000]">
+            <div className="absolute top-16 right-0 w-64 h-screen bg-white shadow-lg z-50">
               <div className="py-4 px-6">
-                <h1 className="font-semibold">Hey {loggedInUser.name}</h1>
+                <h1 className="font-semibold">Hey {loggedInUser?.name}</h1>
                 <Link to="/" className="block text-black mt-4 font-semibold">
                   Home
                 </Link>
                 <h3
-                  className="font-semibold  cursor-pointer"
+                  className="font-semibold cursor-pointer mt-4"
                   onClick={() => toggleCategory("shop")}
                 >
                   Shop
                 </h3>
                 {expandedCategory === "shop" && (
-                  <ul className="ml-4">
+                  <ul className="ml-4 cursor-pointer">
                     <li
                       className="mb-2 cursor-pointer font-semibold"
-                      onClick={() => toggleSubCategory("women")} // Corrected handler
+                      onClick={() => toggleSubCategory("women")}
                     >
                       Women
                     </li>
@@ -251,7 +248,7 @@ export const Navbar = () => {
                     )}
                     <li
                       className="mb-2 cursor-pointer font-semibold"
-                      onClick={() => toggleSubCategory("men")} // Corrected handler
+                      onClick={() => toggleSubCategory("men")}
                     >
                       Men
                     </li>
@@ -269,7 +266,7 @@ export const Navbar = () => {
                     )}
                     <li
                       className="mb-2 cursor-pointer font-semibold"
-                      onClick={() => toggleSubCategory("kids")} // Corrected handler
+                      onClick={() => toggleSubCategory("kids")}
                     >
                       Kids
                     </li>
@@ -284,7 +281,7 @@ export const Navbar = () => {
                     )}
                     <li
                       className="mb-2 cursor-pointer font-semibold"
-                      onClick={() => toggleSubCategory("gifts")} // Corrected handler
+                      onClick={() => toggleSubCategory("gifts")}
                     >
                       Gifts
                     </li>
@@ -320,14 +317,14 @@ const ProfileIcon = ({
   setProfileDropdown,
   profileDropdown,
 }) => (
-  <div className="relative flex items-center sm:gap-2 dropdown-container">
+  <div className="relative flex items-center gap-2 dropdown-container">
     <Profile
-      className="h-3 w-3 cursor-pointer"
+      className="w-5 h-5 cursor-pointer hover:text-gray-600"
       onClick={() => setProfileDropdown(!profileDropdown)}
     />
     <span className="font-semibold text-sm hidden sm:block">{name}</span>
     {profileDropdown && (
-      <div className="absolute top-10 right-4 mt-2 bg-white border border-gray-200 rounded shadow-md text-center">
+      <div className="absolute top-10 right-0 mt-2 bg-white border border-gray-200 rounded shadow-md text-center">
         {isAdmin ? (
           <>
             <Link
@@ -377,7 +374,7 @@ const ProfileIcon = ({
 );
 
 const IconWithBadge = ({ Icon, count, onClick }) => (
-  <div className="relative cursor-pointer hover:bg-gray-200">
+  <div className="relative cursor-pointer hover:text-gray-600">
     <Icon onClick={onClick} className="w-6 h-6 cursor-pointer" />
     {count > 0 && (
       <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">

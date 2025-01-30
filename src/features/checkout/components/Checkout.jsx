@@ -67,35 +67,29 @@ export const Checkout = () => {
   const is900 = useMediaQuery(theme.breakpoints.down(900));
   const is480 = useMediaQuery(theme.breakpoints.down(480));
 
-
-  
-
   useEffect(() => {
     if (currentOrder && currentOrder?._id) {
-        if(selectedPaymentMethod === "CARD"){
-            cardPayment(currentOrder);
-
-        } else if(selectedPaymentMethod === "COD"){
-            dispatch(resetCartByUserIdAsync(loggedInUser?._id));
-            navigate(`/order-success/${currentOrder?._id}`);
-        }
-      
+      if (selectedPaymentMethod === "CARD") {
+        cardPayment(currentOrder);
+      } else if (selectedPaymentMethod === "COD") {
+        dispatch(resetCartByUserIdAsync(loggedInUser?._id));
+        navigate(`/order-success/${currentOrder?._id}`);
+      }
     }
-  }, [currentOrder, dispatch, navigate,selectedPaymentMethod, loggedInUser._id]);
-
-
+  }, [
+    currentOrder,
+    dispatch,
+    navigate,
+    selectedPaymentMethod,
+    loggedInUser._id,
+  ]);
 
   const handleAddAddress = (data) => {
     const address = { ...data, user: loggedInUser._id };
     dispatch(addAddressAsync(address));
   };
 
-
- 
-
-
   const cardPayment = async (order) => {
-    
     const stripe = await loadStripe(
       "pk_test_51QjOA0GSJadpZs7UjNwfZavVBqN4AH2FDxM5TopwdWTLcUwPxOap3jBhxHiK1RjVpIG5llYMkLGMbODqHOhW7SAV00xMAlfftf"
     );
@@ -156,19 +150,21 @@ export const Checkout = () => {
       total: orderTotal + SHIPPING + TAXES,
     };
     if (selectedPaymentMethod === "COD") {
-
       //dispatching the action to create and get order id
       const createdOrder = await dispatch(createOrderAsync(order)).unwrap();
+      console.log(
+        createdOrder,
+        "this is the order id getting from the order id in the reduc"
+      );
 
-      if(createdOrder?._id){
+      if (createdOrder?._id) {
         navigate(`/order-success/${createdOrder._id}`);
       }
-
 
       //creating order directly
       // dispatch(createOrderAsync(order));
     } else if (selectedPaymentMethod === "CARD") {
-       dispatch(createOrderAsync(order));
+      dispatch(createOrderAsync(order));
     }
   };
 
