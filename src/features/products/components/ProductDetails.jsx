@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate , useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   clearSelectedProduct,
   fetchProductByIdAsync,
@@ -56,17 +56,17 @@ import MobileStepper from "@mui/material/MobileStepper";
 import Lottie from "lottie-react";
 import { loadingAnimation } from "../../../assets";
 import SizeChartModal from "../../../constants/SizeChartModal";
+import ImageSlider from "../../../components/ImageSlider";
 
 const SIZES = ["XS", "S", "M", "L", "XL"];
 const COLORS = ["#020202", "#F6F6F6", "#B82222", "#BEA9A9", "#E2BB8D"];
 // const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 export const ProductDetails = () => {
-
   const navigate = useNavigate();
 
   const { id } = useParams();
- 
+
   const product = useSelector(selectSelectedProduct);
   const loggedInUser = useSelector(selectLoggedInUser);
   const dispatch = useDispatch();
@@ -174,11 +174,16 @@ export const ProductDetails = () => {
   }, [dispatch]);
 
   const handleAddToCart = () => {
-    if(!loggedInUser){
+    if (!loggedInUser) {
       navigate("/login");
       return;
     }
-    const item = { user: loggedInUser._id, product: id, quantity, size: selectedSize };
+    const item = {
+      user: loggedInUser._id,
+      product: id,
+      quantity,
+      size: selectedSize,
+    };
     dispatch(addToCartAsync(item));
     setQuantity(1);
   };
@@ -224,7 +229,6 @@ export const ProductDetails = () => {
     setActiveStep(step);
   };
 
-  
   return (
     <>
       {!(
@@ -332,7 +336,9 @@ export const ProductDetails = () => {
                           ))}
                         </AutoPlaySwipeableViews> */}
 
-                        <MobileStepper
+                        <ImageSlider images={product?.images || []} />
+
+                        {/* <MobileStepper
                           steps={maxSteps}
                           position="static"
                           activeStep={activeStep}
@@ -364,7 +370,7 @@ export const ProductDetails = () => {
                               Back
                             </Button>
                           }
-                        />
+                        /> */}
                       </Stack>
                     ) : (
                       <div style={{ width: "100%" }}>
