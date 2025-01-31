@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, Outlet, useNavigate } from "react-router-dom";
 import { axiosi } from "../../../config/axios";
 import { Navbar } from "../../navigation/components/Navbar";
 import {
@@ -16,41 +16,40 @@ import Lottie from "lottie-react";
 import { loadingAnimation } from "../../../assets";
 import { ProductCard } from "../components/ProductCard";
 import { useTheme } from "@emotion/react";
-import { useNavigate } from "react-router-dom";
-import { Footer } from "../../footer/Footer";
-import React from "react";
-import { createWishlistItemAsync, deleteWishlistItemByIdAsync, selectWishlistItems } from "../../wishlist/WishlistSlice";
+import {
+  createWishlistItemAsync,
+  deleteWishlistItemByIdAsync,
+  selectWishlistItems,
+} from "../../wishlist/WishlistSlice";
 import { selectLoggedInUser } from "../../auth/AuthSlice";
 
 const CategoryLayout = () => {
-  const { categoryTitle } = useParams(); // Get category title from URL
-  const [products, setProducts] = useState([]); // Products state
-  const [filters, setFilters] = useState({}); // Filters state
-  const [fetchStatus, setFetchStatus] = useState("idle"); // Fetch status
-  const [categories, setCategories] = useState([]); // Categories data
-  const [subCategories, setSubCategories] = useState([]); // Subcategories for current category
-  const [sort, setSort] = useState(null); // Sort state
+  const { categoryTitle } = useParams();
+  const [products, setProducts] = useState([]);
+  const [fetchStatus, setFetchStatus] = useState("idle");
+  const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+  const [sort, setSort] = useState(null);
 
   const navigate = useNavigate();
   const wishlistItems = useSelector(selectWishlistItems);
   const loggedInUser = useSelector(selectLoggedInUser);
-
   const dispatch = useDispatch();
+
+  const theme = useTheme();
+  const is700 = useMediaQuery(theme.breakpoints.down(700));
 
   const sortOptions = [
     { name: "Price: low to high", sort: "price", order: "asc" },
     { name: "Price: high to low", sort: "price", order: "desc" },
   ];
 
-  const theme = useTheme();
-  const is700 = useMediaQuery(theme.breakpoints.down(700));
-
   // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await axiosi.get("/categories");
-        setCategories(response.data); // Store categories
+        setCategories(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -64,46 +63,37 @@ const CategoryLayout = () => {
     const currentCategory = categories.find(
       (category) => category.name.toLowerCase() === categoryTitle.toLowerCase()
     );
-    setSubCategories(currentCategory?.subCategory || []); // Update subcategories
+    setSubCategories(currentCategory?.subCategory || []);
   }, [categoryTitle, categories]);
 
   // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setFetchStatus("pending"); // Set status to pending
+        setFetchStatus("pending");
 
-        // Ensure sort parameters are extracted correctly
-        const params = sort
-          ? { sort: sort.sort, order: sort.order }
-          : undefined;
-
-        // Fetch products with sort and order parameters
+        const params = sort ? { sort: sort.sort, order: sort.order } : {};
         const productResponse = await axiosi.get(
           `/products/latest-products/${categoryTitle}`,
           { params }
         );
 
-        // Update products state
         setProducts(productResponse.data);
-        setFetchStatus("fulfilled"); // Set status to fulfilled
+        setFetchStatus("fulfilled");
       } catch (error) {
         console.error("Error fetching products:", error);
-        setFetchStatus("error"); // Set status to error
+        setFetchStatus("error");
       }
     };
 
     fetchProducts();
-  }, [categoryTitle, sort]); // Add `sort` as a dependency
+  }, [categoryTitle, sort]);
 
   const handleSubCategoryClick = (subcategoryTitle) => {
-  
-      // Navigate to the dynamic subcategory route
-      navigate(`/categories/${categoryTitle}/${subcategoryTitle}`);
-    
+    navigate(`/categories/${categoryTitle}/${subcategoryTitle}`);
   };
 
-    const handleAddRemoveFromWishlist = (e, productId) => {
+  const handleAddRemoveFromWishlist = (e, productId) => {
     if (e.target.checked) {
       if (!loggedInUser) {
         navigate("/login");
@@ -125,7 +115,7 @@ const CategoryLayout = () => {
     <>
       <Navbar />
       <div className="flex h-screen pt-[65px]">
-        {/* Left Sidebar (Filters & Subcategories) */}
+        {/* Left Sidebar */}
         <div className="w-[20vw] min-w-[250px] p-4 bg-white border-r border-gray-200 shadow-sm">
           <h2 className="font-bold text-xl mb-6 text-gray-800">
             {categoryTitle}
@@ -150,49 +140,32 @@ const CategoryLayout = () => {
           )}
         </div>
 
-        {/* Right Content (Product List) */}
+        {/* Right Content */}
         <div className="flex-1 p-6 bg-gray-50">
-          <Stack
-            flexDirection={"row"}
-            justifyContent={"flex-end"}
-            alignItems={"center"}
-            columnGap={5}
-          >
-            {/* Sort option */}
-            <Stack alignSelf={"flex-end"} width={"12rem"}>
-              <FormControl fullWidth>
-                <InputLabel id="sort-dropdown">Sort</InputLabel>
-                <Select
-                  variant="standard"
-                  labelId="sort-dropdown"
-                  label="Sort"
-                  onChange={(e) =>
-                    setSort(
-                      sortOptions.find(
-                        (option) => option.name === e.target.value
-                      )
-                    )
-                  }
-                  value={sort?.name || null}
-                >
-                  <MenuItem value={null}>Reset</MenuItem>
-                  {sortOptions.map((option) => (
-                    <MenuItem key={option.name} value={option.name}>
-                      {option.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Stack>
+          <Stack flexDirection="row" justifyContent="flex-end">
+            <FormControl variant="standard">
+              <InputLabel>Sort</InputLabel>
+              <Select
+                value={sort?.name || ""}
+                onChange={(e) =>
+                  setSort(sortOptions.find((o) => o.name === e.target.value))
+                }
+              >
+                <MenuItem value="">Reset</MenuItem>
+                {sortOptions.map((option) => (
+                  <MenuItem key={option.name} value={option.name}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Stack>
 
+          {/* Render Products or Subcategory Layout */}
+          <Outlet context={{ categories, subCategories }} />
+
           {fetchStatus === "pending" ? (
-            <Stack
-              width="100%"
-              height="calc(100vh - 4rem)"
-              justifyContent="center"
-              alignItems="center"
-            >
+            <Stack alignItems="center" justifyContent="center" height="50vh">
               <Lottie animationData={loadingAnimation} />
             </Stack>
           ) : fetchStatus === "error" ? (
@@ -200,12 +173,7 @@ const CategoryLayout = () => {
               Failed to load products. Please try again later.
             </p>
           ) : (
-            <Grid
-              gap={is700 ? 1 : 2}
-              container
-              justifyContent={"center"}
-              alignContent={"center"}
-            >
+            <Grid container spacing={2} justifyContent="center">
               {products.length > 0 ? (
                 products.map((product) => (
                   <ProductCard
@@ -213,7 +181,6 @@ const CategoryLayout = () => {
                     id={product._id}
                     title={product.title}
                     thumbnail={product.thumbnail}
-                    // brand={product.brand?.name || "Unknown"}
                     price={product.price}
                     handleAddRemoveFromWishlist={handleAddRemoveFromWishlist}
                   />
@@ -227,7 +194,6 @@ const CategoryLayout = () => {
           )}
         </div>
       </div>
-      
     </>
   );
 };

@@ -5,7 +5,7 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 
 const ImageSlider = ({ images = [] }) => {
-  // ✅ Hooks should always be at the top!
+
   const [index, setIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -21,7 +21,7 @@ const ImageSlider = ({ images = [] }) => {
   const nextImage = () => setIndex((prevIndex) => (prevIndex + 1) % images.length);
   const prevImage = () => setIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
 
-  // ✅ Instead of early return, conditionally render UI
+  
   if (images.length === 0) {
     return (
       <Stack justifyContent="center" alignItems="center" height="300px">
@@ -56,7 +56,7 @@ const ImageSlider = ({ images = [] }) => {
         />
       </AnimatePresence>
 
-      {/* Navigation Buttons */}
+    
       <Button
         onClick={prevImage}
         sx={{
