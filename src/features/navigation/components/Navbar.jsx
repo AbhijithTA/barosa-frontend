@@ -123,10 +123,10 @@ export const Navbar = () => {
             )}
           </div>
 
-          <Link to="/" className="text-sm font-medium hover:text-gray-600">
+          <Link to="/about-us" className="text-sm font-medium hover:text-gray-600">
             ABOUT
           </Link>
-          <Link to="/" className="text-sm font-medium hover:text-gray-600">
+          <Link to="/contact-us" className="text-sm font-medium hover:text-gray-600">
             CONTACT
           </Link>
           <Link to="/" className="text-sm font-medium hover:text-gray-600">
@@ -293,12 +293,12 @@ export const Navbar = () => {
                   </ul>
                 )}
                 <Link
-                  to="/about"
+                  to="/about-us"
                   className="block text-black mt-4 font-semibold"
                 >
                   About
                 </Link>
-                <Link to="/contact" className="block text-black font-semibold">
+                <Link to="/contact-us" className="block text-black font-semibold">
                   Contact
                 </Link>
               </div>

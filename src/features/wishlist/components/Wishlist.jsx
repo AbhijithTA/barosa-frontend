@@ -169,7 +169,7 @@ export const Wishlist = () => {
                 <Grid container gap={1} justifyContent={'center'} alignContent={'center'}>
                   {
                     wishlistItems.map((item,index)=>(
-                      <Stack component={is480?"":Paper} elevation={1} >
+                      <Stack key={item._id} component={is480?"":Paper} elevation={1} >
 
                           <ProductCard item key={item._id} brand={item.product.brand.name} id={item.product._id} price={item.product.price} stockQuantity={item.product.stockQuantity} thumbnail={item.product.thumbnail} title={item.product.title} handleAddRemoveFromWishlist={handleAddRemoveFromWishlist} isWishlistCard={true}/>
                         

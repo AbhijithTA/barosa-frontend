@@ -199,7 +199,6 @@ export const HeroBanner = () => {
     dispatch(toggleFilters());
   };
 
-  console.log(products, "Products");
 
   useEffect(() => {
     if (products.length > 0) {

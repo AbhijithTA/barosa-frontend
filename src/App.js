@@ -41,6 +41,8 @@ import { AdminCateogryPage } from "./pages/AdminCategoryPage";
 import { Navbar } from "./features/navigation/components/Navbar";
 import CategroryLayout from "./features/products/pages/CategoryLayout";
 import SubcategoryLayout from "./features/products/pages/SubCategoryLayout";
+import { AboutUsPage } from "./pages/AboutUsPage";
+import { ContactUsPage } from "./pages/ContactUsPage";
 
 function App() {
   const isAuthChecked = useSelector(selectIsAuthChecked);
@@ -55,6 +57,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/about-us" element={<AboutUsPage />} />
+        <Route path="/contact-us" element={<ContactUsPage />} />
         <Route path="/verify-otp" element={<OtpVerificationPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password/:userId/:passwordResetToken"  element={<ResetPasswordPage />} />

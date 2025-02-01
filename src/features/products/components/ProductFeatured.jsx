@@ -36,7 +36,7 @@ export const ProductFeatured = () => {
       setError(null);
       try {
         const response = await axiosi.get("/products/featured");
-        console.log(response.data);
+        
         setFeaturedProducts(response.data.data);
         setTotalPages(response.data.totalPages);
       } catch (err) {

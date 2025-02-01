@@ -1,64 +1,61 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-
 const categories = [
   {
-    title: "Mens/Shirt",
+    Title: "Mens/Shirt",
     displayTitle: "Men's Shirt",
     buttonText: "VIEW PRODUCTS",
     image:
-      "https://img.freepik.com/free-photo/vertical-shot-successful-male-standing-with-hand-pocket_181624-44739.jpg?uid=P153408150&semt=ais_hybrid", 
+      "https://img.freepik.com/free-photo/vertical-shot-successful-male-standing-with-hand-pocket_181624-44739.jpg?uid=P153408150&semt=ais_hybrid",
   },
   {
-    title: "Ladies/Top",
+    Title: "Ladies/Top",
     displayTitle: "Ladies' Tops",
     buttonText: "VIEW PRODUCTS",
     image:
-      "https://img.freepik.com/premium-photo/beautiful-woman-with-clean-skin-poses-street-city_333900-4297.jpg?uid=P153408150&semt=ais_hybrid", 
+      "https://img.freepik.com/premium-photo/beautiful-woman-with-clean-skin-poses-street-city_333900-4297.jpg?uid=P153408150&semt=ais_hybrid",
   },
   {
-    title: "Mens/Suits",
-    displayTitle: "Mens's Suits",
+    Title: "Mens/Suits",
+    displayTitle: "Men's Suits",
     buttonText: "VIEW PRODUCTS",
     image:
-      "https://img.freepik.com/free-photo/portrait-handsome-fashion-businessman-model-dressed-elegant-blue-suit-with-glasses-posing-gray_158538-11155.jpg?uid=P153408150&semt=ais_hybrid", 
+      "https://img.freepik.com/free-photo/portrait-handsome-fashion-businessman-model-dressed-elegant-blue-suit-with-glasses-posing-gray_158538-11155.jpg?uid=P153408150&semt=ais_hybrid",
   },
   {
-    title: "Mens/Pants",
-    displayTitle: "Mens's Pants",
+    Title: "Mens/Pants",
+    displayTitle: "Men's Pants",
     buttonText: "VIEW PRODUCTS",
     image:
-      "https://img.freepik.com/free-photo/man-wearing-brown-pants-close-up_53876-102239.jpg?uid=P153408150&semt=ais_hybrid", 
+      "https://img.freepik.com/free-photo/man-wearing-brown-pants-close-up_53876-102239.jpg?uid=P153408150&semt=ais_hybrid",
   },
   {
-    title: "Kids/Sleepwear",
+    Title: "Kids/Sleepwear",
     displayTitle: "Kid's Sleepwear",
     buttonText: "VIEW PRODUCTS",
     image:
       "https://img.freepik.com/free-photo/child-pajama_146671-13730.jpg?uid=P153408150&semt=ais_hybrid",
   },
   {
-    title: "Kids/Shorts",
+    Title: "Kids/Shorts",
     displayTitle: "Kid's Shorts",
     buttonText: "VIEW PRODUCTS",
     image:
-      "https://img.freepik.com/free-photo/front-view-smiling-cute-kid-riding-green-skateboard-white-t-shirt-orange-shorts-blue-space_179666-1170.jpg?uid=P153408150&semt=ais_hybrid", 
+      "https://img.freepik.com/free-photo/front-view-smiling-cute-kid-riding-green-skateboard-white-t-shirt-orange-shorts-blue-space_179666-1170.jpg?uid=P153408150&semt=ais_hybrid",
   },
 ];
 
-const CategoryCard = ({ title, buttonText, image }) => {
-
+const CategoryCard = ({ title, buttonText, image, route }) => {
   const navigate = useNavigate();
-  const formattedTitle = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
   const handleClick = () => {
-    navigate(`/categories/${title}`);
+    navigate(`/categories/${route}`);
   };
 
   return (
     <div
-      className="relative group w-full md:w-[91%] h-[500px] overflow-hidden "
+      className="relative group w-full md:w-[91%] h-[500px] overflow-hidden cursor-pointer"
       onClick={handleClick}
     >
       <img
@@ -81,14 +78,18 @@ const CategoriesSection = () => {
   return (
     <div className="bg-gray-50 py-12 px-6 md:px-12">
       <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-        {categories.map((category, index) => (
-          <CategoryCard
-            key={index}
-            title={category.displayTitle}
-            buttonText={category.buttonText}
-            image={category.image}
-          />
-        ))}
+        {categories.map((category, index) => {
+          const [categoryTitle, subcategoryTitle] = category.Title.split("/");
+          return (
+            <CategoryCard
+              key={index}
+              title={category.displayTitle}
+              buttonText={category.buttonText}
+              image={category.image}
+              route={`${categoryTitle}/${subcategoryTitle}`}
+            />
+          );
+        })}
       </div>
     </div>
   );
